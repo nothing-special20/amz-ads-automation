@@ -75,6 +75,7 @@ PROJECT_APPS = [
     'apps.web',
     'apps.teams.apps.TeamConfig',
     'apps.teams_example.apps.TeamsExampleConfig',
+    'apps.data.apps.DataConfig'
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + PEGASUS_APPS + PROJECT_APPS
@@ -277,7 +278,7 @@ CELERY_RESULT_BACKEND = 'redis://redis:6379/0'
 PROJECT_METADATA = {
     'NAME': 'Vyssio',
     'URL': 'http://www.vyssio.com',
-    'DESCRIPTION': "The most amazing SaaS application the world has ever seen",
+    'DESCRIPTION': "Upload your Amazon Ads data to Google Sheets - automatically ",
     'IMAGE': 'https://upload.wikimedia.org/wikipedia/commons/2/20/PEO-pegasus_black.svg',
     'KEYWORDS': 'SaaS, django',
     'CONTACT_EMAIL': 'rquin@billmoretech.com',

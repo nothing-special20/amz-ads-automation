@@ -60,4 +60,5 @@ urlpatterns = [
     path("stripe/", include("djstripe.urls", namespace="djstripe")),
     # hijack urls for impersonation
     path('hijack/', include('hijack.urls', namespace='hijack')),
+    path('data/', include('apps.data.urls'))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
