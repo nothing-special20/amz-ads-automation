@@ -20,6 +20,7 @@ USE_HTTPS_IN_ABSOLUTE_URLS = True  # make Stripe Checkout, email invitations, et
 
 ALLOWED_HOSTS = [
     'www.vyssio.com',
+    'localhost',
 ]
 
 

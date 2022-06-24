@@ -6,7 +6,7 @@ default_context:
   css_theme: default
   database: postgres
   deploy_platform: heroku_docker
-  description: The most amazing SaaS application the world has ever seen
+  description: Upload your Amazon Ads data to Google Sheets - automatically 
   domain_name: www.vyssio.com
   email: rquin@billmoretech.com
   enable_google_login: y

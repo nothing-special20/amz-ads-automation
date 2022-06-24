@@ -1,6 +1,6 @@
 # Vyssio
 
-The most amazing SaaS application the world has ever seen
+Upload your Amazon Ads data to Google Sheets - automatically 
 
 ## Installation - Docker
 
