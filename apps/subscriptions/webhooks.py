@@ -2,7 +2,7 @@ from django.core.mail import mail_admins
 from djstripe import webhooks as djstripe_hooks
 from djstripe.models import Customer, Subscription, Plan
 
-from apps.users.models import CustomUser
+from apps.teams.models import Team
 
 from .helpers import provision_subscription
 
@@ -18,7 +18,7 @@ def checkout_session_completed(event, **kwargs):
     client_reference_id = session.get('client_reference_id')
     subscription_id = session.get('subscription')
 
-    subscription_holder = CustomUser.objects.get(id=client_reference_id)
+    subscription_holder = Team.objects.get(id=client_reference_id)
     provision_subscription(subscription_holder, subscription_id)
 
 

@@ -22,7 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'kSLVFnYMjZvLcdiduydGapaOYelSUKXAInUGuvsc'
+SECRET_KEY = 'woroDFQEZnKoROFykHZbrTltEmlxumoXxPqEISmC'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -50,6 +50,7 @@ THIRD_PARTY_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.twitter',
     'rest_framework',
     'rest_framework_api_key',
     'celery_progress',
@@ -69,6 +70,8 @@ PROJECT_APPS = [
     'apps.users.apps.UserConfig',
     'apps.api.apps.APIConfig',
     'apps.web',
+    'apps.teams.apps.TeamConfig',
+    'apps.teams_example.apps.TeamsExampleConfig',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + PEGASUS_APPS + PROJECT_APPS
@@ -154,7 +157,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Allauth setup
 
-ACCOUNT_ADAPTER = 'apps.users.adapter.EmailAsUsernameAdapter'
+ACCOUNT_ADAPTER = 'apps.teams.adapter.AcceptInvitationAdapter'
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_SUBJECT_PREFIX = ''
@@ -166,6 +169,9 @@ ACCOUNT_SESSION_REMEMBER = True
 ACCOUNT_LOGOUT_ON_GET = True
 ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 
+ACCOUNT_FORMS = {
+    'signup': 'apps.teams.forms.TeamSignupForm',
+}
 
 
 # User signup configuration: change to "mandatory" to require users to confirm email before signing in.
@@ -192,6 +198,7 @@ SOCIALACCOUNT_PROVIDERS = {
             'access_type': 'online',
         }
     }, 
+    'twitter': {},
 }
 
 

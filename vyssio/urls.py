@@ -20,6 +20,9 @@ from django.contrib.sitemaps.views import sitemap
 from django.urls import path, include
 from rest_framework.documentation import include_docs_urls, get_schemajs_view
 
+from apps.teams.urls import team_urlpatterns as single_team_urls
+from apps.subscriptions.urls import team_urlpatterns as subscriptions_team_urls
+from apps.web.urls import team_urlpatterns as web_team_urls
 from apps.web.sitemaps import StaticViewSitemap
 
 schemajs_view = get_schemajs_view(title="API")
@@ -28,12 +31,22 @@ sitemaps = {
     'static': StaticViewSitemap(),
 }
 
+# urls that are unique to using a team should go here
+team_urlpatterns = [
+    path('', include(web_team_urls)),
+    path('subscription/', include(subscriptions_team_urls)),
+    path('team/', include(single_team_urls)),
+    path('example/', include('apps.teams_example.urls')),
+]
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
+    path('a/<slug:team_slug>/', include(team_urlpatterns)),
     path('accounts/', include('allauth.urls')),
     path('users/', include('apps.users.urls')),
     path('subscriptions/', include('apps.subscriptions.urls')),
+    path('teams/', include('apps.teams.urls')),
     path('', include('apps.web.urls')),
     path('pegasus/', include('pegasus.apps.examples.urls')),
     path('pegasus/employees/', include('pegasus.apps.employees.urls')),

@@ -10,7 +10,7 @@ default_context:
   domain_name: www.vyssio.com
   email: rquin@billmoretech.com
   enable_google_login: y
-  enable_twitter_login: n
+  enable_twitter_login: y
   front_end_framework: htmx
   project_name: Vyssio
   project_slug: vyssio
@@ -21,5 +21,5 @@ default_context:
   use_impersonation: y
   use_sentry: y
   use_subscriptions: y
-  use_teams: n
+  use_teams: y
   use_wagtail: n

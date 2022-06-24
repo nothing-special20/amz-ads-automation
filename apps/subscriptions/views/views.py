@@ -9,13 +9,14 @@ from ..helpers import (get_subscription_urls, get_payment_metadata_from_request,
     get_stripe_module)
 from ..metadata import get_active_products_with_metadata, \
     get_product_and_metadata_for_subscription, ACTIVE_PLAN_INTERVALS, get_active_plan_interval_metadata
+from apps.teams.decorators import team_admin_required, login_and_team_required
 from ..models import SubscriptionModelBase
 
 
 @redirect_subscription_errors
-@login_required
-def subscription(request):
-    subscription_holder = request.user
+@team_admin_required
+def subscription(request, team_slug):
+    subscription_holder = request.team
     if subscription_holder.has_active_subscription():
         return _view_subscription(request, subscription_holder)
     else:
@@ -49,7 +50,7 @@ def _view_subscription(request, subscription_holder: SubscriptionModelBase):
 
     return render(request, 'subscriptions/view_subscription.html', {
         'active_tab': 'subscription',
-        'page_title': _('Subscription'),
+        'page_title': _('Subscription | %(team)s') % {'team': request.team},
         'subscription': subscription,
         'subscription_urls': get_subscription_urls(subscription_holder),
         'friendly_payment_amount': friendly_payment_amount,
@@ -100,9 +101,9 @@ def _upgrade_subscription(request, subscription_holder):
     })
 
 
-@login_required
-def subscription_demo(request):
-    subscription_holder = request.user
+@login_and_team_required
+def subscription_demo(request, team_slug):
+    subscription_holder = request.team
     return render(request, 'subscriptions/demo.html', {
         'active_tab': 'subscription_demo',
         'subscription': subscription_holder.active_stripe_subscription,
@@ -110,11 +111,11 @@ def subscription_demo(request):
             subscription_holder.active_stripe_subscription
         ),
         'subscription_urls': get_subscription_urls(subscription_holder),
-        'page_title': _('Subscription Demo'),
+        'page_title': _('Subscription Demo | %(team)s') % {'team': request.team},
     })
 
 
-@login_required
+@login_and_team_required
 @active_subscription_required
-def subscription_gated_page(request):
+def subscription_gated_page(request, team_slug):
     return render(request, 'subscriptions/subscription_gated_page.html')

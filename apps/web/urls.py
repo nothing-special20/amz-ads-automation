@@ -11,3 +11,7 @@ urlpatterns = [
     path('500', TemplateView.as_view(template_name='500.html'), name='500'),
     path('simulate_error', views.simulate_error),
 ]
+
+team_urlpatterns = ([
+    path('', views.team_home, name='home'),
+], 'web_team')

@@ -10,6 +10,7 @@ from stripe.api_resources.billing_portal.session import Session as BillingPortal
 from stripe.api_resources.checkout import Session as CheckoutSession
 
 from .exceptions import SubscriptionConfigError
+from apps.teams.models import Team
 from apps.users.models import CustomUser
 from apps.web.meta import absolute_url
 
@@ -44,7 +45,7 @@ def get_subscription_urls(subscription_holder):
     ]
 
     def _construct_url(base):
-        return reverse(f'subscriptions:{base}')
+        return reverse(f'subscriptions_team:{base}', args=[subscription_holder.slug])
 
     return {
         url_base: _construct_url(url_base) for url_base in url_bases
@@ -55,6 +56,7 @@ def get_payment_metadata_from_request(request):
     return {
         'user_id': request.user.id,
         'user_email': request.user.email,
+        'team_id': request.team.id,
     }
 
 
@@ -64,12 +66,12 @@ def get_stripe_module():
     return stripe
 
 
-def create_stripe_checkout_session(subscription_holder: CustomUser, stripe_price_id: str, user: CustomUser) -> CheckoutSession:
+def create_stripe_checkout_session(subscription_holder: Team, stripe_price_id: str, user: CustomUser) -> CheckoutSession:
     stripe = get_stripe_module()
 
     subscription_urls = get_subscription_urls(subscription_holder)
-    success_url = absolute_url(reverse('subscriptions:checkout_success'))
-    cancel_url = absolute_url(reverse('subscriptions:checkout_canceled'))
+    success_url = absolute_url(reverse('subscriptions_team:checkout_success', args=[subscription_holder.slug]))
+    cancel_url = absolute_url(reverse('subscriptions_team:checkout_canceled', args=[subscription_holder.slug]))
 
     customer_kwargs = {}
     if user.customer:
@@ -97,7 +99,7 @@ def create_stripe_checkout_session(subscription_holder: CustomUser, stripe_price
     return checkout_session
 
 
-def create_stripe_portal_session(subscription_holder: CustomUser) -> BillingPortalSession:
+def create_stripe_portal_session(subscription_holder: Team) -> BillingPortalSession:
     stripe = get_stripe_module()
     if not subscription_holder.subscription or not subscription_holder.subscription.customer:
         raise SubscriptionConfigError(_("Whoops, we couldn't find a subscription associated with your account!"))
@@ -110,7 +112,7 @@ def create_stripe_portal_session(subscription_holder: CustomUser) -> BillingPort
     return portal_session
 
 
-def provision_subscription(subscription_holder: CustomUser, subscription_id: str) -> Subscription:
+def provision_subscription(subscription_holder: Team, subscription_id: str) -> Subscription:
     stripe = get_stripe_module()
     subscription = stripe.Subscription.retrieve(subscription_id)
     djstripe_subscription = Subscription.sync_from_stripe_data(subscription)

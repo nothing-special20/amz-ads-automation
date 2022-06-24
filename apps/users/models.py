@@ -5,10 +5,8 @@ from django.db import models
 
 from djstripe.models import Customer
 
-from apps.subscriptions.models import SubscriptionModelBase
 
-
-class CustomUser(SubscriptionModelBase, AbstractUser):
+class CustomUser(AbstractUser):
     """
     Add additional fields to the user model here.
     """

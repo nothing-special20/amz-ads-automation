@@ -33,7 +33,7 @@ class _ActiveSubscriptionRequired:
 
     def __call__(self, request, *args, **kwargs):
         proceed = True
-        subscription_holder = request.user
+        subscription_holder = request.team
         if not subscription_holder.has_active_subscription():
             messages.info(request, _("Sorry, that page requires an active subscription. You've been redirected."))
             proceed = False
@@ -47,7 +47,7 @@ class _ActiveSubscriptionRequired:
         if proceed:
             return self.f(request, *args, **kwargs)
         else:
-            return HttpResponseRedirect(reverse('subscriptions:subscription_details'))
+            return HttpResponseRedirect(reverse('subscriptions_team:subscription_details', args=[request.team.slug]))
 
 
 def active_subscription_required(function=None, limit_to_plans: List[str] = None):

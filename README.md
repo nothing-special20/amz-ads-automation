@@ -124,6 +124,10 @@ celery -A vyssio worker -l INFO -B
 
 To setup Google Authentication, follow the [instructions here](https://django-allauth.readthedocs.io/en/latest/providers.html#google).
 
+## Twitter Authentication Setup
+
+To setup Twitter Authentication, follow the [instructions here](https://django-allauth.readthedocs.io/en/latest/providers.html#twitter).
+
 ## Running Tests
 
 To run tests:

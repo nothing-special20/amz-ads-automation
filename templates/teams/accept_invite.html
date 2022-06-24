@@ -1,0 +1,55 @@
+{% extends "web/base.html" %}
+{% load static %}
+{% load i18n %}
+{% block body %}
+  <section class="container mb-3 mt-7">
+    <div class="row align-items-center">
+      <div class="col-md-4">
+        <img class="img-fluid" src="{% static 'images/undraw/undraw_lighthouse.svg' %}" alt="Welcome!">
+      </div>
+      <div class="col-md">
+        {% if not invitation.is_accepted %}
+          <h3>Accept Invitation?</h3>
+          <p class="lead">
+            You've been invited to join {{ invitation.team.name }} by {{ invitation.invited_by.get_display_name }}.
+          </p>
+          {% if request.user.is_authenticated %}
+            <form method="post">
+              {% csrf_token %}
+              {% if request.user.email == invitation.email %}
+                <input type="submit" class="btn btn-primary" value="Accept Invitation"/>
+              {% else %}
+                <p>
+                  This invitation was sent to {{ invitation.email }} but you're logged in as {{ request.user.email }}.
+                  What would you like to do?
+                </p>
+                <p class="my-2">
+                  <input type="submit" class="btn btn-primary"
+                         value="Accept as {{ request.user.email }}"/>
+                  <a class="btn btn-outline-secondary"
+                     href="{% url 'account_logout' %}?invitation_id={{ invitation.id }}">
+                    Sign out
+                  </a>
+                </p>
+              {% endif %}
+            </form>
+          {% else %}
+            <p class="buttons">
+              <a class="btn btn-primary"
+                 href="{% url 'account_signup' %}?invitation_id={{ invitation.id }}">
+                Create Account to Accept
+              </a>
+            </p>
+          {% endif %}
+        {% else %}
+          <p class="lead">
+            Sorry, it looks like that invitation has already been accepted or expired.
+          </p>
+          <p>
+            If you think this is a mistake, ask your team administrator to invite you again!
+          </p>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+{% endblock %}
