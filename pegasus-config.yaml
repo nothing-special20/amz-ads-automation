@@ -1,0 +1,25 @@
+default_context:
+  _pegasus_version: '2022.6'
+  author_name: Rob
+  ci: github_actions
+  css_framework: bootstrap
+  css_theme: default
+  database: postgres
+  deploy_platform: heroku_docker
+  description: The most amazing SaaS application the world has ever seen
+  domain_name: www.vyssio.com
+  email: rquin@billmoretech.com
+  enable_google_login: y
+  enable_twitter_login: n
+  front_end_framework: htmx
+  project_name: Vyssio
+  project_slug: vyssio
+  stripe_payment_mode: checkout
+  subscription_billing_model: default
+  use_api_keys: y
+  use_docker: y
+  use_impersonation: y
+  use_sentry: y
+  use_subscriptions: y
+  use_teams: n
+  use_wagtail: n
