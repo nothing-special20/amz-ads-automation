@@ -27,7 +27,10 @@ SECRET_KEY = 'woroDFQEZnKoROFykHZbrTltEmlxumoXxPqEISmC'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'www.vyssio.com',
+    'localhost'
+]
 
 
 # Application definition
@@ -122,8 +125,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': os.environ.get('DJANGO_DATABASE_NAME', 'vyssio'),
         'USER': os.environ.get('DJANGO_DATABASE_USER', 'postgres'),
-        'PASSWORD': os.environ.get('DJANGO_DATABASE_PASSWORD', '***'),
-        'HOST': os.environ.get('DJANGO_DATABASE_HOST', 'localhost'),
+        'PASSWORD': os.environ.get('DJANGO_DATABASE_PASSWORD', 'postgres'),
+        'HOST': os.environ.get('DJANGO_DATABASE_HOST', 'db'),
         'PORT': os.environ.get('DJANGO_DATABASE_HOST', '5432'),
     }
 }
@@ -265,8 +268,8 @@ REST_FRAMEWORK = {
 
 
 # Celery setup (using redis)
-CELERY_BROKER_URL = 'redis://localhost:6379/0'
-CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+CELERY_BROKER_URL = 'redis://redis:6379/0'
+CELERY_RESULT_BACKEND = 'redis://redis:6379/0'
 
 # Pegasus config
 
