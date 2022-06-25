@@ -19,6 +19,7 @@ DATABASES = {
 USE_HTTPS_IN_ABSOLUTE_URLS = True  # make Stripe Checkout, email invitations, etc. use HTTPS instead of HTTP
 
 ALLOWED_HOSTS = [
+    'vyssio.com',
     'www.vyssio.com',
     'localhost',
 ]

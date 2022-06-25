@@ -28,6 +28,7 @@ SECRET_KEY = 'woroDFQEZnKoROFykHZbrTltEmlxumoXxPqEISmC'
 DEBUG = False
 
 ALLOWED_HOSTS = [
+    'vyssio.com',
     'www.vyssio.com',
     'localhost'
 ]

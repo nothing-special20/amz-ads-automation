@@ -38,6 +38,7 @@ USE_HTTPS_IN_ABSOLUTE_URLS = True
 
 DEBUG = False
 ALLOWED_HOSTS = [
+    'vyssio.com',
     'www.vyssio.com',
     'localhost',
 ]
