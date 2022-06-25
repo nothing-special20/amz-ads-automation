@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'woroDFQEZnKoROFykHZbrTltEmlxumoXxPqEISmC'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
     'www.vyssio.com',
@@ -228,6 +228,9 @@ STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
+    BASE_DIR / 'templates',
+    '/staticfiles/',
+    '/templates/',
 ]
 
 # uncomment to use manifest storage to bust cache when file change
