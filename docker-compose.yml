@@ -56,7 +56,6 @@ services:
       - 443:443
       - 80:80
     volumes:
-      - ./static:/home/app/web/staticfiles
       - static_volume:/home/app/web/static_files
       - certs:${NGINX_CERTS_DIR}
       - html:/usr/share/nginx/html
