@@ -19,6 +19,12 @@
         <span class="icon"><i class="fa fa-user"></i></span><span>Profile</span>
       </a>
     </li>
+    <li class="nav-item">
+      <a href="{% url 'data:my_ads_accounts' %}"
+         class="nav-link {% if active_tab == 'my_ads_accounts' %}active{% endif %}">
+        <span class="icon"><i class="fa fa-rocket"></i></span><span>My Ads Accounts</span>
+      </a>
+    </li>
     {% if user.has_usable_password %}
       <li class="nav-item">
         <a href="{% url 'account_change_password' %}" class="nav-link {% if 'accounts/password/change' in request.path %}active{% endif %}">

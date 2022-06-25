@@ -1,17 +1,17 @@
-import os
-import sys
-import inspect
-import pandas as pd
-import json
+from django.urls import reverse
 
-import django
-from django.shortcuts import render, redirect
-from django.http import HttpResponse, HttpResponseRedirect
-from django.template.loader import render_to_string
+from django.shortcuts import render
+
+from .functions import amz_refresh_token
+
+import os
+
+LWA_CLIENT_ID = os.environ.get('LWA_CLIENT_ID')
 
 def index(request):
     if request.user.is_authenticated:
-        return render(request, 'analytics/index.html')
+        return render(request, 'data/my_ads_accounts.html')
 
     else:
-        return render(request, 'subscriptions/subscription_required.html')
+        return render(request, 'subscriptions/subscription_gated_page.html',
+                        context = {'LWA_CLIENT_ID': LWA_CLIENT_ID})
