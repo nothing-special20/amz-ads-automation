@@ -8,10 +8,10 @@ import os
 
 LWA_CLIENT_ID = os.environ.get('LWA_CLIENT_ID')
 
+
 def index(request):
     if request.user.is_authenticated:
-        return render(request, 'data/my_ads_accounts.html')
+        return render(request, 'data/my_ads_accounts.html', context = {'LWA_CLIENT_ID': LWA_CLIENT_ID})
 
     else:
-        return render(request, 'subscriptions/subscription_gated_page.html',
-                        context = {'LWA_CLIENT_ID': LWA_CLIENT_ID})
+        return render(request, 'subscriptions/subscription_gated_page.html')

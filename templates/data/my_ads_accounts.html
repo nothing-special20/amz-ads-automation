@@ -3,7 +3,7 @@
 {% block app %}
 <div id="amazon-root"></div>
  <script type="text/javascript">
-    var clientId = "{{context.LWA_CLIENT_ID}}";
+  var clientId = "{{LWA_CLIENT_ID}}";
     window.onAmazonLoginReady = function() {
       amazon.Login.setClientId(clientId);
     };
@@ -33,7 +33,7 @@
             'profile' : {'essential': false}
         };
         amazon.Login.authorize(options,
-            'https://senshi.social');
+            'localhost:8000');
         return false;
     };
 </script>
