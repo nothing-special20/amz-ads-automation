@@ -9,6 +9,10 @@ import os
 LWA_CLIENT_ID = os.environ.get('LWA_CLIENT_ID')
 DOMAIN_URL = os.environ.get('DOMAIN_URL')
 
+# parse request object for necessary info
+# make an accounts table
+def handle_lwa(request):
+    print(request)
 
 def index(request):
     if request.user.is_authenticated:
