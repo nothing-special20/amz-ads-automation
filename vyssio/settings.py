@@ -55,6 +55,7 @@ THIRD_PARTY_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.twitter',
+    'allauth.socialaccount.providers.amazon',
     'rest_framework',
     'rest_framework_api_key',
     'celery_progress',
@@ -204,7 +205,12 @@ SOCIALACCOUNT_PROVIDERS = {
         }
     }, 
     'twitter': {},
-    'amazaon': {
+    'amazon': {
+        'APP': {
+            'client_id': os.environ.get('LWA_CLIENT_ID'),
+            'secret': os.environ.get('LWA_CLIENT_SECRET'),
+            'key': ''
+        },
         'SCOPE': [
             'profile', 
             'advertising::campaign_management'

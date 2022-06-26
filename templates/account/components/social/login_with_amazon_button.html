@@ -1,0 +1,7 @@
+{% load i18n %}
+{% load socialaccount %}
+{% load static %}
+<a class="btn btn-outline-secondary w-100" href="{% provider_login_url 'amazon' %}">
+  <img class="socialicon" style="transform: scale(2.5, 2.5);" src="{% static 'images/amz/amazon_logo.svg' %}" alt="{% trans 'Amazon Logo' %}">
+  {% trans "Continue with Amazon" %}
+</a>
