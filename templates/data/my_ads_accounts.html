@@ -28,7 +28,7 @@
   <script type="text/javascript">
     document.getElementById('LoginWithAmazon').onclick = function() {
         options = {}
-        options.scope = 'profile';
+        options.scope = ['profile', 'advertising::campaign_management'];
         options.scope_data = {
             'profile' : {'essential': false}
         };
