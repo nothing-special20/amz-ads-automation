@@ -204,6 +204,12 @@ SOCIALACCOUNT_PROVIDERS = {
         }
     }, 
     'twitter': {},
+    'amazaon': {
+        'SCOPE': [
+            'profile', 
+            'advertising::campaign_management'
+        ],
+    }
 }
 
 
