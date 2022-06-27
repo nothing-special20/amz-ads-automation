@@ -29,12 +29,35 @@ from apps.web.sitemaps import StaticViewSitemap
 from urllib.parse import urlparse
 from urllib.parse import parse_qs
 from django.shortcuts import render
+import requests
+import os
 
 schemajs_view = get_schemajs_view(title="API")
 
 sitemaps = {
     'static': StaticViewSitemap(),
 }
+
+LWA_CLIENT_ID = os.environ.get("LWA_CLIENT_ID")
+LWA_CLIENT_SECRET = os.environ.get("LWA_CLIENT_SECRET")
+
+def amz_refresh_token(code):
+    scope = "advertiser_campaign_view"
+    grant_type = "authorization_code"
+
+    data = {
+        "grant_type": grant_type,
+        "code": code,
+        "redirect_uri": "https://www.vyssio.com/data/handle_login",
+        "client_id": LWA_CLIENT_ID,
+        "client_secret": LWA_CLIENT_SECRET,
+        # "scope": scope
+    }
+    
+    amazon_auth_url = "https://api.amazon.com/auth/o2/token"
+    auth_response = requests.post(amazon_auth_url, data=data)
+
+    print(auth_response.text)
 
 def handle_login(request):
     print('~~~~~~~~weeeeeeeee~~~~~~~~')
@@ -44,14 +67,15 @@ def handle_login(request):
         print(request)
         url = request.build_absolute_uri()
         parsed_url = urlparse(url)
-        captured_value = parse_qs(parsed_url.query)['code'][0]
-        print(captured_value)
+        code = parse_qs(parsed_url.query)['code'][0]
+        amz_refresh_token(code)
 
     return render(request, 'web/app_home.html', context={
         'team': 'fixthis',
         'active_tab': 'dashboard',
         'page_title': ('fixthis Dashboard') % {'team': 'fixthis'},
     })
+
 
 # urls that are unique to using a team should go here
 team_urlpatterns = [
