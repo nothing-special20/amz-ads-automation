@@ -37,6 +37,9 @@ sitemaps = {
 }
 
 def handle_login(request):
+    print('~~~~~~~~weeeeeeeee~~~~~~~~')
+    print(request.method)
+    print('~~~~~~~~weeeeeeeee~~~~~~~~')
     if request.method == 'GET':
         print(request)
         url = request.build_absolute_uri()
