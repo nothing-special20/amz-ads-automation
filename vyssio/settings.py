@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'woroDFQEZnKoROFykHZbrTltEmlxumoXxPqEISmC'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = os.environ.get('DEBUG')
 
 ALLOWED_HOSTS = [
     'vyssio.com',
@@ -210,12 +210,12 @@ SOCIALACCOUNT_PROVIDERS = {
             'client_id': os.environ.get('LWA_CLIENT_ID'),
             'secret': os.environ.get('LWA_CLIENT_SECRET'),
             'key': '',
-            'redirect_uri': 'https://www.vyssio.com'
         },
         'SCOPE': [
             'profile', 
             'advertising::campaign_management'
         ],
+        'REDIRECT_URI': 'https://www.vyssio.com/data/handle_lwa/'
     }
 }
 

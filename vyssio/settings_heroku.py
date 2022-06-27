@@ -36,7 +36,8 @@ CSRF_COOKIE_SECURE = True
 
 USE_HTTPS_IN_ABSOLUTE_URLS = True
 
-DEBUG = False
+DEBUG = os.environ.get('DEBUG')
+
 ALLOWED_HOSTS = [
     'vyssio.com',
     'www.vyssio.com',
