@@ -80,5 +80,5 @@ urlpatterns = [
     # hijack urls for impersonation
     path('hijack/', include('hijack.urls', namespace='hijack')),
     path('data/', include('apps.data.urls')),
-    path('/accounts/amazon/login/callback/', handle_login)
+    path('accounts/amazon/login/callback/', handle_login)
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
