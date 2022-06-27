@@ -25,6 +25,11 @@ from apps.subscriptions.urls import team_urlpatterns as subscriptions_team_urls
 from apps.web.urls import team_urlpatterns as web_team_urls
 from apps.web.sitemaps import StaticViewSitemap
 
+##fixthis rm this later
+from urllib.parse import urlparse
+from urllib.parse import parse_qs
+from django.shortcuts import render
+
 schemajs_view = get_schemajs_view(title="API")
 
 sitemaps = {
@@ -33,11 +38,11 @@ sitemaps = {
 
 def handle_login(request):
     if request.method == 'GET':
-        print(request.GET)
-        # url = 'https://www.example.com/some_path?some_key=some_value'
-        # parsed_url = urlparse(url)
-        # captured_value = parse_qs(parsed_url.query)['code'][0]
-        # print(captured_value)
+        print(request)
+        url = request.build_absolute_uri()
+        parsed_url = urlparse(url)
+        captured_value = parse_qs(parsed_url.query)['code'][0]
+        print(captured_value)
 
     return render(request, 'web/app_home.html', context={
         'team': 'fixthis',
