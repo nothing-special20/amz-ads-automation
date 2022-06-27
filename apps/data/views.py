@@ -13,9 +13,9 @@ DOMAIN_URL = os.environ.get('DOMAIN_URL')
 # make an accounts table
 def handle_login(request):
     return render(request, 'web/app_home.html', context={
-        'team': request.team,
+        'team': 'fixthis',
         'active_tab': 'dashboard',
-        'page_title': _('%(team)s Dashboard') % {'team': request.team},
+        'page_title': _('fixthis Dashboard') % {'team': 'fixthis'},
     })
 
 def index(request):
