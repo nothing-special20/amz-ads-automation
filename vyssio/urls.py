@@ -31,6 +31,20 @@ sitemaps = {
     'static': StaticViewSitemap(),
 }
 
+def handle_login(request):
+    if request.method == 'GET':
+        print(request.GET)
+        # url = 'https://www.example.com/some_path?some_key=some_value'
+        # parsed_url = urlparse(url)
+        # captured_value = parse_qs(parsed_url.query)['code'][0]
+        # print(captured_value)
+
+    return render(request, 'web/app_home.html', context={
+        'team': 'fixthis',
+        'active_tab': 'dashboard',
+        'page_title': ('fixthis Dashboard') % {'team': 'fixthis'},
+    })
+
 # urls that are unique to using a team should go here
 team_urlpatterns = [
     path('', include(web_team_urls)),
@@ -60,5 +74,6 @@ urlpatterns = [
     path("stripe/", include("djstripe.urls", namespace="djstripe")),
     # hijack urls for impersonation
     path('hijack/', include('hijack.urls', namespace='hijack')),
-    path('data/', include('apps.data.urls'))
+    path('data/', include('apps.data.urls')),
+    path('/accounts/amazon/login/callback/', handle_login)
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
