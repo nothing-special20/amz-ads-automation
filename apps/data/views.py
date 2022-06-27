@@ -15,7 +15,7 @@ def handle_login(request):
     return render(request, 'web/app_home.html', context={
         'team': 'fixthis',
         'active_tab': 'dashboard',
-        'page_title': _('fixthis Dashboard') % {'team': 'fixthis'},
+        'page_title': ('fixthis Dashboard') % {'team': 'fixthis'},
     })
 
 def index(request):
