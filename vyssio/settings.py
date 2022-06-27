@@ -215,7 +215,7 @@ SOCIALACCOUNT_PROVIDERS = {
             'profile', 
             'advertising::campaign_management'
         ],
-        'REDIRECT_URI': 'https://www.vyssio.com/data/handle_lwa/'
+        'REDIRECT_URI': 'https://www.vyssio.com/data/handle_login/'
     }
 }
 

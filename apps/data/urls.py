@@ -10,5 +10,5 @@ app_name = 'data'
 urlpatterns = [
     path('', views.index, name='data'),
     path('my_ads_accounts/', views.index, name='my_ads_accounts'),
-    path('login/', views.handle_lwa, name='handle_login')   
+    path('login/', views.handle_login, name='handle_login')   
 ]
