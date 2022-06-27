@@ -48,7 +48,7 @@ def amz_refresh_token(code):
     data = {
         "grant_type": grant_type,
         "code": code,
-        "redirect_uri": "https://www.vyssio.com/data/handle_login",
+        "redirect_uri": "https://www.vyssio.com/data/login",
         "client_id": LWA_CLIENT_ID,
         "client_secret": LWA_CLIENT_SECRET,
         # "scope": scope
