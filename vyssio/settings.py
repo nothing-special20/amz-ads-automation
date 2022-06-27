@@ -209,7 +209,7 @@ SOCIALACCOUNT_PROVIDERS = {
         'APP': {
             'client_id': os.environ.get('LWA_CLIENT_ID'),
             'secret': os.environ.get('LWA_CLIENT_SECRET'),
-            'key': '',
+            'key': os.environ.get('LWA_CLIENT_SECURITY_PROFILE_ID'),
         },
         'SCOPE': [
             'profile', 
