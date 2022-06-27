@@ -211,9 +211,9 @@ SOCIALACCOUNT_PROVIDERS = {
             'secret': os.environ.get('LWA_CLIENT_SECRET'),
             'key': os.environ.get('LWA_CLIENT_SECURITY_PROFILE_ID'),
         },
-        'SCOPES': [
-            'profile', 
-            'advertising::campaign_management'
+        'SCOPES': [ 
+            'advertising::campaign_management',
+            'profile',
         ],
         'REDIRECT_URI': 'https://www.vyssio.com/data/handle_login/'
     }
