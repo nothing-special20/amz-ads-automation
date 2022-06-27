@@ -211,7 +211,7 @@ SOCIALACCOUNT_PROVIDERS = {
             'secret': os.environ.get('LWA_CLIENT_SECRET'),
             'key': os.environ.get('LWA_CLIENT_SECURITY_PROFILE_ID'),
         },
-        'SCOPES': [ 
+        'SCOPE': [ 
             'advertising::campaign_management',
             'profile',
         ],
