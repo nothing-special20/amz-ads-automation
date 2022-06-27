@@ -12,6 +12,7 @@ DOMAIN_URL = os.environ.get('DOMAIN_URL')
 # parse request object for necessary info
 # make an accounts table
 def handle_login(request):
+    print(request)
     return render(request, 'web/app_home.html', context={
         'team': 'fixthis',
         'active_tab': 'dashboard',
