@@ -89,7 +89,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
     path('a/<slug:team_slug>/', include(team_urlpatterns)),
-    path('accounts/amazon/login/callback/', handle_login),
+    # path('accounts/amazon/login/callback/', handle_login),
     path('accounts/', include('allauth.urls')),
     path('users/', include('apps.users.urls')),
     path('subscriptions/', include('apps.subscriptions.urls')),
