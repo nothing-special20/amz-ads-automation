@@ -4,6 +4,9 @@ from django.shortcuts import render
 
 from .functions import amz_refresh_token
 
+from urllib.parse import urlparse
+from urllib.parse import parse_qs
+
 import os
 
 LWA_CLIENT_ID = os.environ.get('LWA_CLIENT_ID')
@@ -12,7 +15,13 @@ DOMAIN_URL = os.environ.get('DOMAIN_URL')
 # parse request object for necessary info
 # make an accounts table
 def handle_login(request):
-    print(request.method)
+    if request.method == 'GET':
+        print(request.GET)
+        # url = 'https://www.example.com/some_path?some_key=some_value'
+        # parsed_url = urlparse(url)
+        # captured_value = parse_qs(parsed_url.query)['code'][0]
+        # print(captured_value)
+
     return render(request, 'web/app_home.html', context={
         'team': 'fixthis',
         'active_tab': 'dashboard',
