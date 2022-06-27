@@ -11,8 +11,12 @@ DOMAIN_URL = os.environ.get('DOMAIN_URL')
 
 # parse request object for necessary info
 # make an accounts table
-def handle_lwa(request):
-    print(request)
+def handle_login(request):
+    return render(request, 'web/app_home.html', context={
+        'team': request.team,
+        'active_tab': 'dashboard',
+        'page_title': _('%(team)s Dashboard') % {'team': request.team},
+    })
 
 def index(request):
     if request.user.is_authenticated:
