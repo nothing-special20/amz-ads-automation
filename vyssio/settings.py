@@ -77,7 +77,8 @@ PROJECT_APPS = [
     'apps.web',
     'apps.teams.apps.TeamConfig',
     'apps.teams_example.apps.TeamsExampleConfig',
-    'apps.data.apps.DataConfig'
+    'apps.data.apps.DataConfig',
+    'apps.amazon_api.apps.AmazonAPIConfig',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + PEGASUS_APPS + PROJECT_APPS

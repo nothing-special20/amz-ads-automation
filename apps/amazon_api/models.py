@@ -2,6 +2,7 @@ from django.db import models
 
 # Create your models here.
 class AmzTokens(models.Model):
+    USER = models.TextField()
     PROFILE_ID = models.TextField()
     PROFILE_NAME = models.TextField()
     REFRESH_TOKEN = models.TextField()

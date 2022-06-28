@@ -7,7 +7,7 @@ from django.shortcuts import render
 from urllib.parse import urlparse
 from urllib.parse import parse_qs
 
-from .amazon_functions import amz_refresh_token, amz_profiles, amz_profile_details, es_populate_vid_data
+from .amazon_functions import amz_refresh_token, amz_profiles, amz_profile_details, store_refresh_token
 
 
 app_name = 'api'
@@ -22,26 +22,16 @@ def handle_login(request):
         parsed_url = urlparse(url)
         redirect_uri = parsed_url.netloc
         code = parse_qs(parsed_url.query)['code'][0]
+        print('~~~~' + code)
         tokens = amz_refresh_token(code, redirect_uri)
+        print(tokens)
         refresh_token = tokens['refresh_token']
         access_token = tokens['access_token']
         amz_profile_id = amz_profiles(access_token)
         profile_details = amz_profile_details(access_token, amz_profile_id)
-        profile_name = profile_details['name']
-        es_populate_vid_data(amz_profile_id, profile_name, refresh_token)
-
-    return render(request, 'web/app_home.html', context={
-        'team': 'fixthis',
-        'active_tab': 'dashboard',
-        'page_title': ('fixthis Dashboard') % {'team': 'fixthis'},
-    })
-
-def handle_login_test(request):
-    print('~~~~~~~~weeeeeeeee~~~~~~~~')
-    print(request.method)
-    print('~~~~~~~~weeeeeeeee~~~~~~~~')
-    if request.method == 'POST':
-        print(request)
+        print(profile_details)
+        profile_name = profile_details['accountInfo']['name']
+        store_refresh_token(amz_profile_id, profile_name, refresh_token)
 
     return render(request, 'web/app_home.html', context={
         'team': 'fixthis',

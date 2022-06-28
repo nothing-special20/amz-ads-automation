@@ -17,7 +17,7 @@ def amz_refresh_token(code, redirect_uri):
     data = {
         "grant_type": grant_type,
         "code": code,
-        "redirect_uri": "https://" + redirect_uri + "/accounts/amazon/login/callback/",
+        "redirect_uri": "http://" + redirect_uri + "/accounts/amazon/login/callback/",
         "client_id": LWA_CLIENT_ID,
         "client_secret": LWA_CLIENT_SECRET,
     }
@@ -56,12 +56,10 @@ def amz_profile_details(access_token, profile_id):
 
     endpoint = AMZ_API_URL + "v2/profiles/"
     response = requests.get(endpoint, headers=headers)
-    
-    print(response.json())
 
-    return response.json()
+    return response.json()[0]
 
-def es_populate_vid_data(profile_id, profile_name, refresh_token):
+def store_refresh_token(profile_id, profile_name, refresh_token):
     doc = AmzTokens(PROFILE_ID=profile_id,
                     PROFILE_NAME=profile_name,
                     REFRESH_TOKEN=refresh_token, 
