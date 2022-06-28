@@ -23,8 +23,9 @@ def handle_login(request):
         redirect_uri = parsed_url.netloc
         code = parse_qs(parsed_url.query)['code'][0]
         tokens = amz_refresh_token(code, redirect_uri)
-        amz_profile_id = amz_profiles(tokens['access_token'])
-        amz_profile_details(amz_profile_id)
+        access_token = tokens['access_token']
+        amz_profile_id = amz_profiles(access_token)
+        amz_profile_details(access_token, amz_profile_id)
 
     return render(request, 'web/app_home.html', context={
         'team': 'fixthis',
