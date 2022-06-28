@@ -59,8 +59,9 @@ def amz_profile_details(access_token, profile_id):
 
     return response.json()[0]
 
-def store_refresh_token(profile_id, profile_name, refresh_token):
-    doc = AmzTokens(PROFILE_ID=profile_id,
+def store_refresh_token(user, profile_id, profile_name, refresh_token):
+    doc = AmzTokens(USER=user,
+                    PROFILE_ID=profile_id,
                     PROFILE_NAME=profile_name,
                     REFRESH_TOKEN=refresh_token, 
                     LAST_UPDATED=datetime.now())

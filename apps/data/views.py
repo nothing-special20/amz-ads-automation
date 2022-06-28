@@ -8,6 +8,9 @@ from urllib.parse import urlparse
 from urllib.parse import parse_qs
 
 import os
+import sys
+
+from apps.amazon_api.models import AmzTokens
 
 LWA_CLIENT_ID = os.environ.get('LWA_CLIENT_ID')
 DOMAIN_URL = os.environ.get('DOMAIN_URL')
@@ -30,7 +33,17 @@ def handle_login(request):
 
 def index(request):
     if request.user.is_authenticated:
-        return render(request, 'data/my_ads_accounts.html', context = {'LWA_CLIENT_ID': LWA_CLIENT_ID, 'DOMAIN_URL': DOMAIN_URL})
+        accounts = list(AmzTokens.objects.all().values())
+        accounts = [x['PROFILE_NAME'] for x in accounts]
+        return render(
+                        request, 
+                        'data/my_ads_accounts.html', 
+                        context = {
+                            'LWA_CLIENT_ID': LWA_CLIENT_ID, 
+                            'DOMAIN_URL': DOMAIN_URL,
+                            'ACCOUNTS': accounts
+                            }
+                        )
 
     else:
         return render(request, 'subscriptions/subscription_gated_page.html')

@@ -14,8 +14,7 @@ app_name = 'api'
 
 def handle_login(request):
     url = request.build_absolute_uri()
-    if request.method == 'POST':
-        print(request)
+    user = request.user.username
 
     if request.method == 'GET':
         print(request)
@@ -31,7 +30,7 @@ def handle_login(request):
         profile_details = amz_profile_details(access_token, amz_profile_id)
         print(profile_details)
         profile_name = profile_details['accountInfo']['name']
-        store_refresh_token(amz_profile_id, profile_name, refresh_token)
+        store_refresh_token(user, amz_profile_id, profile_name, refresh_token)
 
     return render(request, 'web/app_home.html', context={
         'team': 'fixthis',

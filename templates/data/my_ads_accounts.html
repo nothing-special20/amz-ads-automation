@@ -8,5 +8,13 @@
     Manage your Amazon Ads accounts.
   </p>
   {% include 'account/components/social/login_with_amazon_button.html' %}
+  <br>
+  <br>
+  <p>Linked Accounts</p>
+  <div>
+    {% for account in ACCOUNTS %}
+      <li>{{ account }}</li>
+    {% endfor %}
+  </div
 </section>
 {% endblock %}
