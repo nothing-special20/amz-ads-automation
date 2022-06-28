@@ -25,6 +25,7 @@ def amz_refresh_token(code, redirect_uri):
     print(auth_response.text)
     return auth_response.json()
 
+#get the profiles associated with a specific refresh token & LWA app
 def amz_profiles(access_token):
     headers = {
         "Content-Type": "application/json",
@@ -38,5 +39,21 @@ def amz_profiles(access_token):
     profile_id = str(response.json()[0]['profileId'])
 
     print(profile_id)
+
+    return profile_id
+
+# get details for a specific profile
+def amz_profile_details(access_token, profile_id):
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": access_token,
+        "Amazon-Advertising-API-ClientId": LWA_CLIENT_ID,
+        "Amazon-Advertising-API-Scope": profile_id,
+    }
+
+    endpoint = AMZ_API_URL + "v2/profiles/"
+    response = requests.get(endpoint, headers=headers)
+    
+    print(response.json())
 
     return profile_id
