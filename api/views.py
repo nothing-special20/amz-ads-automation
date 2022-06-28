@@ -33,7 +33,7 @@ def handle_login(request):
         'page_title': ('fixthis Dashboard') % {'team': 'fixthis'},
     })
 
-def handle_login(request):
+def handle_login_test(request):
     print('~~~~~~~~weeeeeeeee~~~~~~~~')
     print(request.method)
     print('~~~~~~~~weeeeeeeee~~~~~~~~')
