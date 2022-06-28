@@ -27,11 +27,11 @@ def handle_login(request):
         code = parse_qs(parsed_url.query)['code'][0]
         amz_refresh_token(code, redirect_uri)
 
-    return render(request, 'web/app_home.html', context={
-        'team': 'fixthis',
-        'active_tab': 'dashboard',
-        'page_title': ('fixthis Dashboard') % {'team': 'fixthis'},
-    })
+        return render(request, 'web/app_home.html', context={
+            'team': 'fixthis',
+            'active_tab': 'dashboard',
+            'page_title': ('fixthis Dashboard') % {'team': 'fixthis'},
+        })
 
 def handle_login_test(request):
     print('~~~~~~~~weeeeeeeee~~~~~~~~')
