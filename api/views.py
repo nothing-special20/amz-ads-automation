@@ -12,7 +12,7 @@ from .functions import amz_refresh_token
 
 app_name = 'api'
 
-def handle_callback(request):
+def handle_login(request):
     print('~~~~~~~~weeeeeeeee~~~~~~~~')
     print(request.method)
     print('~~~~~~~~weeeeeeeee~~~~~~~~')
