@@ -20,6 +20,7 @@ def handle_login(request):
         print(request)
         url = request.build_absolute_uri()
         parsed_url = urlparse(url)
+        print(parsed_url)
         code = parse_qs(parsed_url.query)['code'][0]
         amz_refresh_token(code)
 
