@@ -2,40 +2,11 @@
 {% load static %}
 {% block app %}
 <div id="amazon-root"></div>
- <script type="text/javascript">
-  var clientId = "{{LWA_CLIENT_ID}}";
-    window.onAmazonLoginReady = function() {
-      amazon.Login.setClientId(clientId);
-    };
-    (function(d) {
-      var a = d.createElement('script'); a.type = 'text/javascript';
-      a.async = true; a.id = 'amazon-login-sdk';
-      a.src = 'https://assets.loginwithamazon.com/sdk/na/login1.js';
-      d.getElementById('amazon-root').appendChild(a);
-    })(document);
-
-</script>
 <section class="app-card">
   <h3 class="pg-subtitle">My Ads Accounts</h3>
   <p>
     This is a create-read-update-delete (CRUD) example of objects&mdash;Players&mdash;that belong to a team.
   </p>
-  <a href id="LoginWithAmazon">
-    <img border="0" alt="Login with Amazon"
-        src="{% static 'images/amz/login_with_amazon.png' %}"
-        width="156" height="32" />
-  </a>
-  <script type="text/javascript">
-    document.getElementById('LoginWithAmazon').onclick = function() {
-        options = {}
-        options.scope = ['profile', 'advertising::campaign_management'];
-        options.scope_data = {
-            'profile' : {'essential': false}
-        };
-        amazon.Login.authorize(options,
-            '{{DOMAIN_URL}}/data/handle_login');
-        return false;
-    };
-</script>
+  {% include 'account/components/social/login_with_amazon_button.html' %}
 </section>
 {% endblock %}
