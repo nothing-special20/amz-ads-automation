@@ -7,7 +7,7 @@ from django.shortcuts import render
 from urllib.parse import urlparse
 from urllib.parse import parse_qs
 
-from .amazon_functions import amz_refresh_token, amz_profiles, amz_profile_details
+from .amazon_functions import amz_refresh_token, amz_profiles, amz_profile_details, es_populate_vid_data
 
 
 app_name = 'api'
@@ -23,9 +23,12 @@ def handle_login(request):
         redirect_uri = parsed_url.netloc
         code = parse_qs(parsed_url.query)['code'][0]
         tokens = amz_refresh_token(code, redirect_uri)
+        refresh_token = tokens['refresh_token']
         access_token = tokens['access_token']
         amz_profile_id = amz_profiles(access_token)
-        amz_profile_details(access_token, amz_profile_id)
+        profile_details = amz_profile_details(access_token, amz_profile_id)
+        profile_name = profile_details['name']
+        es_populate_vid_data(amz_profile_id, profile_name, refresh_token)
 
     return render(request, 'web/app_home.html', context={
         'team': 'fixthis',

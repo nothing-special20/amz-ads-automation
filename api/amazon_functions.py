@@ -1,7 +1,10 @@
 import requests
 import os
+from datetime import datetime
 
 app_name = 'api'
+
+from .models import AmzTokens
 
 LWA_CLIENT_ID = os.environ.get("LWA_CLIENT_ID")
 LWA_CLIENT_SECRET = os.environ.get("LWA_CLIENT_SECRET")
@@ -56,4 +59,11 @@ def amz_profile_details(access_token, profile_id):
     
     print(response.json())
 
-    return profile_id
+    return response.json()
+
+def es_populate_vid_data(profile_id, profile_name, refresh_token):
+    doc = AmzTokens(PROFILE_ID=profile_id,
+                    PROFILE_NAME=profile_name,
+                    REFRESH_TOKEN=refresh_token, 
+                    LAST_UPDATED=datetime.now())
+    doc.save()
