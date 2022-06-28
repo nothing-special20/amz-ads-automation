@@ -16,12 +16,12 @@ def handle_login(request):
     print('~~~~~~~~weeeeeeeee~~~~~~~~')
     print(request.method)
     print('~~~~~~~~weeeeeeeee~~~~~~~~')
+    url = request.build_absolute_uri()
     if request.method == 'POST':
         print(request)
 
-    if request.method == 'GET':
+    if request.method == 'GET' and 'callback' in url:
         print(request)
-        url = request.build_absolute_uri()
         parsed_url = urlparse(url)
         redirect_uri = parsed_url.netloc
         code = parse_qs(parsed_url.query)['code'][0]
