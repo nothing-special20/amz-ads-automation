@@ -45,7 +45,7 @@ urlpatterns = [
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
     path('a/<slug:team_slug>/', include(team_urlpatterns)),
     # path('accounts/amazon/login/callback/', handle_login),
-    path('', include('apps.amazon_api.urls')),
+    # path('', include('apps.amazon_api.urls')),
     path('accounts/', include('allauth.urls')),
     path('users/', include('apps.users.urls')),
     path('subscriptions/', include('apps.subscriptions.urls')),
@@ -63,5 +63,5 @@ urlpatterns = [
     path("stripe/", include("djstripe.urls", namespace="djstripe")),
     # hijack urls for impersonation
     path('hijack/', include('hijack.urls', namespace='hijack')),
-    path('data/', include('apps.data.urls')),
+    # path('data/', include('apps.data.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
