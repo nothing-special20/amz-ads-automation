@@ -51,7 +51,9 @@ def fetch_init_ads_report(request):
         report_date = record['REPORT_DATE']
         google_sheet_id = record['GOOGLE_SHEET_ID']
 
-        report_values = download_and_convert_report(access_token, profile_id, report_id, report_date)
+        print(google_sheet_id)
+
+        # report_values = download_and_convert_report(access_token, profile_id, report_id, report_date)
         
-        google_append_sheet(report_values, google_sheet_id)
+        # google_append_sheet(report_values, google_sheet_id)
     
