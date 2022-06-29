@@ -7,6 +7,9 @@ from googleapiclient.errors import HttpError
 from google.oauth2 import service_account
 import requests
 import os
+import sys
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
 GOOGLE_SCOPES = ['https://www.googleapis.com/auth/spreadsheets', 'https://www.googleapis.com/auth/drive']
 
@@ -70,7 +73,7 @@ def google_create_sheet(values, file_name):
     except HttpError as err:
         print(err)
 
-def share_file(real_file_id, email):
+def google_share_file(real_file_id, email):
     """Batch permission modification.
     Args:
         real_file_id: file Id

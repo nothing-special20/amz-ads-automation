@@ -15,6 +15,13 @@
     {% for account in ACCOUNTS %}
       <li>{{ account }}</li>
     {% endfor %}
-  </div
+  </div>
+  <button 
+    type="submit" 
+    onclick="location.href='{% url 'data:build_init_ads_rpt' %}'" 
+    name='mybtn2'
+    >
+      Prepare Ads Report in Google Sheets
+    </button>
 </section>
 {% endblock %}

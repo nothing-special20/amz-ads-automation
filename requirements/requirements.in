@@ -12,3 +12,7 @@ celery-progress
 celery
 celery[redis]
 sentry-sdk
+pandas
+google-auth
+google-auth-oauthlib
+google-api-python-client
