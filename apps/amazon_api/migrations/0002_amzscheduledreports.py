@@ -18,6 +18,7 @@ class Migration(migrations.Migration):
                 ('PROFILE_ID', models.TextField()),
                 ('REPORT_ID', models.TextField()),
                 ('REPORT_DATE', models.IntegerField()),
+                ('GOOGLE_SHEET_ID', models.TextField()),
                 ('DATE_SCHEDULED', models.DateTimeField()),
             ],
         ),
