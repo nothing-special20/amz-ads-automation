@@ -8,7 +8,7 @@ import gzip
 
 app_name = 'api'
 
-from .models import AmzTokens
+from .models import AmzTokens, AmzScheduledReports
 
 LWA_CLIENT_ID = os.environ.get("LWA_CLIENT_ID")
 LWA_CLIENT_SECRET = os.environ.get("LWA_CLIENT_SECRET")
@@ -64,12 +64,23 @@ def amz_profile_details(access_token, profile_id):
     return response.json()[0]
 
 def store_refresh_token(user, profile_id, profile_name, refresh_token):
-    doc = AmzTokens(USER=user,
-                    PROFILE_ID=profile_id,
-                    PROFILE_NAME=profile_name,
-                    REFRESH_TOKEN=refresh_token, 
-                    LAST_UPDATED=datetime.now())
+    doc = AmzTokens(
+            USER=user,
+            PROFILE_ID=profile_id,
+            PROFILE_NAME=profile_name,
+            REFRESH_TOKEN=refresh_token, 
+            LAST_UPDATED=datetime.now())
     doc.save()
+
+def store_scheduled_reports(user, profile_id, report_id, report_date):
+    doc = AmzScheduledReports(
+            USER=user,
+            PROFILE_ID=profile_id,
+            REPORT_ID=report_id,
+            REPORT_DATE=report_date, 
+            DATE_SCHEDULED=datetime.now())
+    doc.save()
+
 
 #get the amazon access token from an amazon refresh token
 def amz_access_token(refresh_token):
@@ -111,7 +122,7 @@ def create_report_and_get_report_id(metrics, report_date, access_token, profile_
     r_json = response.json()
     return r_json["reportId"]
 
-async def download_and_convert_report(access_token, profile_id, report_id, date_temp):
+def download_and_convert_report(access_token, profile_id, report_id, date_temp):
     headers = {
         'Amazon-Advertising-API-ClientId': LWA_CLIENT_ID,
         'Amazon-Advertising-API-Scope': profile_id,
@@ -119,7 +130,7 @@ async def download_and_convert_report(access_token, profile_id, report_id, date_
         'Content-Type': 'application/json'
     }
     
-    response = await requests.get(f"{AMZ_API_URL}v2/reports/{report_id}/download", headers=headers)
+    response = requests.get(f"{AMZ_API_URL}v2/reports/{report_id}/download", headers=headers)
     
     response = response.content
     zip_file = io.BytesIO(response)

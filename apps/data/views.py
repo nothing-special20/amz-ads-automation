@@ -12,7 +12,7 @@ DOMAIN_URL = os.environ.get('DOMAIN_URL')
 
 
 def build_init_ads_rpt(request):
-    init_ads_report()
+    init_ads_report(request)
     return HttpResponse(status=200)
 
 # parse request object for necessary info
