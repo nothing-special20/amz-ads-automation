@@ -3,7 +3,7 @@ from django.http import HttpResponse
 
 import os
 
-from .functions import init_ads_report
+from .functions import generate_init_ads_report, fetch_init_ads_report
 
 from apps.amazon_api.models import AmzTokens
 
@@ -12,7 +12,11 @@ DOMAIN_URL = os.environ.get('DOMAIN_URL')
 
 
 def build_init_ads_rpt(request):
-    init_ads_report(request)
+    generate_init_ads_report(request)
+    return HttpResponse(status=200)
+
+def fetch_init_ads_rpt(request):
+    fetch_init_ads_report(request)
     return HttpResponse(status=200)
 
 # parse request object for necessary info

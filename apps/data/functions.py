@@ -13,20 +13,17 @@ LWA_CLIENT_ID = os.environ.get("LWA_CLIENT_ID")
 LWA_CLIENT_SECRET = os.environ.get("LWA_CLIENT_SECRET")
 RETURN_URL = os.environ.get("RETURN_URL")
 
+last_n_days = [datetime.datetime.now() - datetime.timedelta(x) for x in range(60)]
+last_n_days = [x.year * 10000 + x.month * 100 + x.day for x in last_n_days]
+
+REFRESH_TOKEN = AmzTokens.objects.values().last()['REFRESH_TOKEN']
+
 # https://developer.amazon.com/docs/app-submission-api/python-example.html
-def init_ads_report(request):
+def generate_init_ads_report(request):
     user = request.user.username
     sheet_name = 'data'
     report_name = 'product_ads_report'
     metrics = "campaignName,adGroupName,impressions,clicks,cost,asin,sku"
-
-    last_n_days = [datetime.datetime.now() - datetime.timedelta(x) for x in range(60)]
-    last_n_days = [x.year * 10000 + x.month * 100 + x.day for x in last_n_days]
-
-    REFRESH_TOKEN = AmzTokens.objects.values().last()['REFRESH_TOKEN']
-    print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-    print(REFRESH_TOKEN)
-    print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
 
     google_sheet_id = google_create_sheet([['adId', 'cost', 'adGroupName', 'clicks', 'asin', 'impressions', 'sku', 'campaignName', 'date']], report_name)
     google_share_file(google_sheet_id, "raq5005@gmail.com")
@@ -39,7 +36,17 @@ def init_ads_report(request):
 
         store_scheduled_reports(user, profile_id, report_id, report_date)
 
-        # report_values = download_and_convert_report(access_token, profile_id, report_id, report_date)
 
-        # google_append_sheet(report_values, google_sheet_id)
-  
+def fetch_init_ads_report(request):
+    access_token = amz_access_token(REFRESH_TOKEN)
+    scheduled_reports = AmzScheduledReports.objects.all().values()
+    google_sheet_id = '10Vlt4bPT-jcuH3Rxmre9UWQ1GPZbzydClPS2hpyolVQ'
+    for record in scheduled_reports:
+        print(record)
+        profile_id = record['PROFILE_ID']
+        report_id = record['REPORT_ID']
+        report_date = record['REPORT_DATE']
+        report_values = download_and_convert_report(access_token, profile_id, report_id, report_date)
+
+        google_append_sheet(report_values, google_sheet_id)
+    

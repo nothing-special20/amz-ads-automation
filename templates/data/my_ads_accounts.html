@@ -16,12 +16,22 @@
       <li>{{ account }}</li>
     {% endfor %}
   </div>
+  <br>
   <button 
     type="submit" 
     onclick="location.href='{% url 'data:build_init_ads_rpt' %}'" 
     name='mybtn2'
+    class="btn btn-lg btn-primary"
     >
       Prepare Ads Report in Google Sheets
+    </button>
+    <button 
+      type="submit" 
+      onclick="location.href='{% url 'data:fetch_init_ads_rpt' %}'" 
+      name='mybtn2'
+      class="btn btn-lg btn-outline-primary"
+      >
+        Fetch Ads Report in Google Sheets
     </button>
 </section>
 {% endblock %}
