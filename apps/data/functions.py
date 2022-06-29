@@ -16,7 +16,10 @@ RETURN_URL = os.environ.get("RETURN_URL")
 last_n_days = [datetime.datetime.now() - datetime.timedelta(x) for x in range(60)]
 last_n_days = [x.year * 10000 + x.month * 100 + x.day for x in last_n_days]
 
-REFRESH_TOKEN = AmzTokens.objects.values().last()['REFRESH_TOKEN']
+try:
+    REFRESH_TOKEN = AmzTokens.objects.values().last()['REFRESH_TOKEN']
+except:
+    REFRESH_TOKEN = ''
 
 # https://developer.amazon.com/docs/app-submission-api/python-example.html
 def generate_init_ads_report(request):
