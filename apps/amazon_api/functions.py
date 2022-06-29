@@ -21,7 +21,7 @@ def amz_refresh_token(code, redirect_uri):
     data = {
         "grant_type": grant_type,
         "code": code,
-        "redirect_uri": "http://" + redirect_uri + "/accounts/amazon/login/callback/",
+        "redirect_uri": "https://" + redirect_uri + "/accounts/amazon/login/callback/",
         "client_id": LWA_CLIENT_ID,
         "client_secret": LWA_CLIENT_SECRET,
     }
