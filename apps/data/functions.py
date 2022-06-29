@@ -31,6 +31,8 @@ def generate_init_ads_report(request):
     google_sheet_id = google_create_sheet([['adId', 'cost', 'adGroupName', 'clicks', 'asin', 'impressions', 'sku', 'campaignName', 'date']], report_name)
     google_share_file(google_sheet_id, "raq5005@gmail.com")
 
+    print(REFRESH_TOKEN)
+
     access_token = amz_access_token(REFRESH_TOKEN)
     profile_id = amz_profiles(access_token)
 
