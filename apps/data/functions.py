@@ -40,13 +40,13 @@ def generate_init_ads_report(request):
 def fetch_init_ads_report(request):
     access_token = amz_access_token(REFRESH_TOKEN)
     scheduled_reports = AmzScheduledReports.objects.all().values()
-    google_sheet_id = '10Vlt4bPT-jcuH3Rxmre9UWQ1GPZbzydClPS2hpyolVQ'
     for record in scheduled_reports:
-        print(record)
         profile_id = record['PROFILE_ID']
         report_id = record['REPORT_ID']
         report_date = record['REPORT_DATE']
-        report_values = download_and_convert_report(access_token, profile_id, report_id, report_date)
+        google_sheet_id = record['GOOGLE_SHEET_ID']
 
+        report_values = download_and_convert_report(access_token, profile_id, report_id, report_date)
+        
         google_append_sheet(report_values, google_sheet_id)
     
