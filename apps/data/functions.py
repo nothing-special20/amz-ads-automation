@@ -3,6 +3,7 @@ import requests
 import pandas as pd
 import numpy as np
 import datetime
+import time
 
 from apps.amazon_api.models import AmzTokens, AmzScheduledReports
 
@@ -39,7 +40,7 @@ def generate_init_ads_report(request):
     for report_date in last_n_days:
         report_id = create_report_and_get_report_id(metrics, report_date, access_token, profile_id)
 
-        store_scheduled_reports(user, profile_id, report_id, report_date)
+        store_scheduled_reports(user, profile_id, report_id, report_date, google_sheet_id)
 
 
 def fetch_init_ads_report(request):
@@ -49,11 +50,13 @@ def fetch_init_ads_report(request):
         profile_id = record['PROFILE_ID']
         report_id = record['REPORT_ID']
         report_date = record['REPORT_DATE']
-        google_sheet_id = record['GOOGLE_SHEET_ID']
+        # google_sheet_id = record['GOOGLE_SHEET_ID']
+        google_sheet_id = '1fZkZsJ6LD85qKrU3tyTY9RZmM_OBrr17qQxsDsiKub4'
 
         print(record)
 
-        # report_values = download_and_convert_report(access_token, profile_id, report_id, report_date)
-        
-        # google_append_sheet(report_values, google_sheet_id)
+        report_values = download_and_convert_report(access_token, profile_id, report_id, report_date)
+
+        google_append_sheet(report_values, google_sheet_id)
+        time.sleep(3)
     
