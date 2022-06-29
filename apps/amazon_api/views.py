@@ -7,7 +7,7 @@ from django.shortcuts import render
 from urllib.parse import urlparse
 from urllib.parse import parse_qs
 
-from .amazon_functions import amz_refresh_token, amz_profiles, amz_profile_details, store_refresh_token
+from .functions import amz_refresh_token, amz_profiles, amz_profile_details, store_refresh_token
 
 
 app_name = 'api'
