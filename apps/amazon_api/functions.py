@@ -103,7 +103,7 @@ def amz_access_token(refresh_token):
 
     return auth_token_header_value
 
-def create_report_and_get_report_id(metrics, report_date, access_token, profile_id):
+def create_report_and_get_report_id(report, metrics, report_date, access_token, profile_id):
     headers = {
         'Amazon-Advertising-API-ClientId': LWA_CLIENT_ID,
         'Amazon-Advertising-API-Scope': profile_id,
@@ -118,7 +118,7 @@ def create_report_and_get_report_id(metrics, report_date, access_token, profile_
             # "segment": "query"
     }
     
-    response = requests.post(AMZ_API_URL + "v2/sp/productAds/report", headers=headers, json=data)
+    response = requests.post(AMZ_API_URL + "v2/sp/{}/report".format(report), headers=headers, json=data)
 
     print(response.text)
 
@@ -144,7 +144,7 @@ def download_and_convert_report(access_token, profile_id, report_id, date_temp, 
     
     # dataframe from json
     report_df = pd.json_normalize(json_data)
-    report_df = report_df[fields]
+    report_df = report_df
     report_df["date"] = date_temp
     # report_values = [list(report_df.columns.values)]
     # report_values.extend(report_df.values.tolist())
