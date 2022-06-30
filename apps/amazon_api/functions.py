@@ -120,6 +120,8 @@ def create_report_and_get_report_id(metrics, report_date, access_token, profile_
     
     response = requests.post(AMZ_API_URL + "v2/sp/productAds/report", headers=headers, json=data)
 
+    print(response.text)
+
     r_json = response.json()
     return r_json["reportId"]
 
