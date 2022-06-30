@@ -28,7 +28,7 @@ def rpt_metrics():
     dimensions = ','.join(dimensions)
 
     core_metrics = ['impressions', 'clicks', 'cost']
-    core_metrics = '.'.join(core_metrics)
+    core_metrics = ','.join(core_metrics)
 
     sales_metrics = ['attributedSales1d', 'attributedSales7d', 'attributedSales14d', 'attributedSales30d']
     sales_metrics = ','.join(sales_metrics)
