@@ -77,7 +77,7 @@ class RequestAmzReportData:
 		self.report_name = 'product_ads_report'
 		self.access_token = amz_access_token(REFRESH_TOKEN)
 		self.profile_id = amz_profiles(self.access_token)
-		self.last_n_days = last_n_days()
+		self.last_n_days = last_n_days(60)
 		
 	def metrics(self):
 		pass
