@@ -125,7 +125,7 @@ def create_report_and_get_report_id(metrics, report_date, access_token, profile_
     r_json = response.json()
     return r_json["reportId"]
 
-def download_and_convert_report(access_token, profile_id, report_id, date_temp):
+def download_and_convert_report(access_token, profile_id, report_id, date_temp, fields):
     headers = {
         'Amazon-Advertising-API-ClientId': LWA_CLIENT_ID,
         'Amazon-Advertising-API-Scope': profile_id,
@@ -144,6 +144,7 @@ def download_and_convert_report(access_token, profile_id, report_id, date_temp):
     
     # dataframe from json
     report_df = pd.json_normalize(json_data)
+    report_df = report_df[fields]
     report_df["date"] = date_temp
     # report_values = [list(report_df.columns.values)]
     # report_values.extend(report_df.values.tolist())
