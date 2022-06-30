@@ -24,7 +24,7 @@ except:
 
 # Standard Amazon Ads Metrics used throughout other report
 def rpt_metrics():
-    dimensions = ['campaignName', 'adGroupName', 'asin', 'sku', 'date']
+    dimensions = ['campaignName', 'adGroupName', 'asin', 'sku']
     dimensions = ','.join(dimensions)
 
     core_metrics = ['impressions', 'clicks', 'cost']
