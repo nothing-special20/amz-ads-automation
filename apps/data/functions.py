@@ -75,6 +75,7 @@ class RequestAmzReportData:
 		self.user = request.user.username
 		self.sheet_name = 'data'
 		self.report_name = 'product_ads_report'
+		print(REFRESH_TOKEN)
 		self.access_token = amz_access_token(REFRESH_TOKEN)
 		self.profile_id = amz_profiles(self.access_token)
 		self.last_n_days = last_n_days(60)
