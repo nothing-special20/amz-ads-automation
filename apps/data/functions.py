@@ -76,7 +76,7 @@ def fetch_init_ads_report(request):
 
         print(record)
 
-        report_values = download_and_convert_report(access_token, profile_id, report_id, report_date, rpt_metrics())
+        report_values = download_and_convert_report(access_token, profile_id, report_id, report_date, rpt_metrics().split(','))
 
         google_append_sheet(report_values, google_sheet_id)
         time.sleep(3)
