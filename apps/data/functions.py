@@ -67,7 +67,7 @@ def generate_init_ads_report(request):
 
 def fetch_init_ads_report(request):
     access_token = amz_access_token(REFRESH_TOKEN)
-    scheduled_reports = AmzScheduledReports.objects.all().filter(GOOGLE_SHEET_ID__isnull=True).values()
+    scheduled_reports = AmzScheduledReports.objects.all().values()
     for record in scheduled_reports:
         profile_id = record['PROFILE_ID']
         report_id = record['REPORT_ID']
