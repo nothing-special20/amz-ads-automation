@@ -72,12 +72,13 @@ def store_refresh_token(user, profile_id, profile_name, refresh_token):
             LAST_UPDATED=datetime.now())
     doc.save()
 
-def store_scheduled_reports(user, profile_id, report_id, report_date):
+def store_scheduled_reports(user, profile_id, report_id, report_date, google_sheet_id):
     doc = AmzScheduledReports(
             USER=user,
             PROFILE_ID=profile_id,
             REPORT_ID=report_id,
             REPORT_DATE=report_date, 
+            GOOGLE_SHEET_ID=google_sheet_id,
             DATE_SCHEDULED=datetime.now())
     doc.save()
 

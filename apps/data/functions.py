@@ -22,12 +22,34 @@ try:
 except:
     REFRESH_TOKEN = ''
 
+# Standard Amazon Ads Metrics used throughout other report
+def rpt_metrics():
+    dimensions = ['campaignName', 'adGroupName', 'asin', 'sku', 'date']
+    dimensions = ','.join(dimensions)
+
+    core_metrics = ['impressions', 'clicks', 'cost']
+    core_metrics = '.'.join(core_metrics)
+
+    sales_metrics = ['attributedSales1d', 'attributedSales7d', 'attributedSales14d', 'attributedSales30d']
+    sales_metrics = ','.join(sales_metrics)
+
+    order_metrics = ['attributedUnitsOrdered1d', 'attributedUnitsOrdered7d', 'attributedUnitsOrdered14d', 'attributedUnitsOrdered30d']
+    order_metrics = ','.join(order_metrics)
+
+    conversion_metrics = ['attributedConversions1d', 'attributedConversions7d', 'attributedConversions14d', 'attributedConversions30d']
+    conversion_metrics = ','.join(conversion_metrics)
+
+    metrics = ','.join([dimensions, core_metrics, sales_metrics, order_metrics, conversion_metrics])
+
+    return metrics
+
 # https://developer.amazon.com/docs/app-submission-api/python-example.html
 def generate_init_ads_report(request):
     user = request.user.username
     sheet_name = 'data'
     report_name = 'product_ads_report'
-    metrics = "campaignName,adGroupName,impressions,clicks,cost,asin,sku"
+    # metrics = "campaignName,adGroupName,impressions,clicks,cost,asin,sku"
+    metrics = rpt_metrics()
 
     google_sheet_id = google_create_sheet([['adId', 'cost', 'adGroupName', 'clicks', 'asin', 'impressions', 'sku', 'campaignName', 'date']], report_name)
     google_share_file(google_sheet_id, "raq5005@gmail.com")
@@ -45,13 +67,12 @@ def generate_init_ads_report(request):
 
 def fetch_init_ads_report(request):
     access_token = amz_access_token(REFRESH_TOKEN)
-    scheduled_reports = AmzScheduledReports.objects.all().values()
+    scheduled_reports = AmzScheduledReports.objects.all().filter(GOOGLE_SHEET_ID__isnull=True).values()
     for record in scheduled_reports:
         profile_id = record['PROFILE_ID']
         report_id = record['REPORT_ID']
         report_date = record['REPORT_DATE']
-        # google_sheet_id = record['GOOGLE_SHEET_ID']
-        google_sheet_id = '1fZkZsJ6LD85qKrU3tyTY9RZmM_OBrr17qQxsDsiKub4'
+        google_sheet_id = record['GOOGLE_SHEET_ID']
 
         print(record)
 
