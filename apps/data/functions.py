@@ -141,7 +141,7 @@ class UploadDataToGoogleSheets:
 
 			print(record)
 
-			report_values = download_and_convert_report(access_token, profile_id, report_id, report_date, product_ads_metrics().split(','))
+			report_values = download_and_convert_report(access_token, profile_id, report_id, report_date, self.metrics().split(','))
 
 			google_append_sheet(report_values, google_sheet_id)
 			time.sleep(3)
