@@ -24,14 +24,31 @@
     class="btn btn-lg btn-primary"
     >
       Prepare Ads Report in Google Sheets
-    </button>
-    <button 
-      type="submit" 
-      onclick="location.href='{% url 'data:fetch_init_ads_rpt' %}'" 
-      name='mybtn2'
-      class="btn btn-lg btn-outline-primary"
-      >
-        Fetch Ads Report in Google Sheets
-    </button>
+  </button>
+  <button 
+    type="submit" 
+    onclick="location.href='{% url 'data:fetch_init_ads_rpt' %}'" 
+    name='mybtn2'
+    class="btn btn-lg btn-outline-primary"
+    >
+      Fetch Ads Report in Google Sheets
+  </button>
+  <br><br>
+  <button 
+    type="submit" 
+    onclick="location.href='{% url 'data:build_init_search_term_keyword_rpt' %}'" 
+    name='mybtn2'
+    class="btn btn-lg btn-primary"
+    >
+      Prepare Search Term Keyword Report in Google Sheets
+  </button>
+  <button 
+    type="submit" 
+    onclick="location.href='{% url 'data:fetch_init_search_term_keyword_rpt' %}'" 
+    name='mybtn2'
+    class="btn btn-lg btn-outline-primary"
+    >
+      Fetch Search Term Keyword Report in Google Sheets
+  </button>
 </section>
 {% endblock %}

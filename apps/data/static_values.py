@@ -2,7 +2,7 @@
 def product_ads_metrics():
     dimensions = ['campaignName', 'adGroupName', 'asin', 'sku']
 
-    core_metrics = ['impressions', 'clicks', 'cost', 'vctr', 'vtr']
+    core_metrics = ['impressions', 'clicks', 'cost']
 
     sales_metrics = ['attributedSales1d', 'attributedSales7d', 'attributedSales14d', 'attributedSales30d']
 
@@ -26,20 +26,29 @@ def product_ads_metrics():
     return metrics
 
 
-def search_term_metrics():
+def search_term_keyword_metrics():
     dimensions = []
 
+    core_metrics = ['impressions', 'clicks', 'cost']
+
+    keyword_metrics = ['keywordStatus', 'keywordText', 'matchType']
+
+    conversion_metrics = ['attributedConversions1d', 'attributedConversions7d', 'attributedConversions14d', 'attributedConversions30d']
+
+    metrics = [core_metrics, keyword_metrics, conversion_metrics]
+    metrics = [','.join(x) for x in metrics]
+    metrics = ','.join(metrics)
+
+    return metrics
+
+def search_term_target_metrics():
     core_metrics = ['impressions', 'clicks', 'cost', 'vctr', 'vtr']
 
     search_term_specific_metrics = ['searchTermImpressionRank', 'searchTermImpressionShare', 'query']
 
-    keyword_metrics = ['keywordStatus', 'keywordText', 'matchType']
-
     uncategorized = ['targetingExpression', 'targetingText', 'targetingType']
 
     bid_metrics = ['keywordBid']
-
-    conversion_metrics = ['attributedConversions1d', 'attributedConversions7d', 'attributedConversions14d', 'attributedConversions30d']
 
     new_to_brand_metrics = ['attributedOrderRateNewToBrand14d', 
                             'attributedOrdersNewToBrand14d', 
@@ -49,10 +58,3 @@ def search_term_metrics():
                             'attributedUnitsOrderedNewToBrand14d',
                             'attributedUnitsOrderedNewToBrandPercentage14d'
                             ]
-    new_to_brand_metrics = ','.join(new_to_brand_metrics)
-
-    metrics = [dimensions, core_metrics, search_term_specific_metrics, bid_metrics, keyword_metrics, conversion_metrics, new_to_brand_metrics, uncategorized]
-    metrics = [','.join(x) for x in metrics]
-    metrics = ','.join(metrics)
-
-    return metrics

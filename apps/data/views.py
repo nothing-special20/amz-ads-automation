@@ -4,7 +4,8 @@ from django.http import HttpResponse
 import os
 
 # from .functions import generate_init_ads_report, fetch_init_ads_report
-from .functions import RequestAmazonProductAdsReportData, UploadAmazonProductAdsReportDataToGoogleSheets
+from .functions import RequestAmazonProductAdsReportData, UploadAmazonProductAdsReportDataToGoogleSheets, \
+                        RequestAmazonSearchTermKeywordReportData, UploadAmazonSearchTermKeywordReportDataToGoogleSheets
 
 from apps.amazon_api.models import AmzTokens
 
@@ -18,6 +19,14 @@ def build_init_ads_rpt(request):
 
 def fetch_init_ads_rpt(request):
     UploadAmazonProductAdsReportDataToGoogleSheets(request).execute()
+    return HttpResponse(status=200)
+
+def build_init_search_term_rpt(request):
+    RequestAmazonSearchTermKeywordReportData(request).execute()
+    return HttpResponse(status=200)
+
+def fetch_init_search_term_rpt(request):
+    UploadAmazonSearchTermKeywordReportDataToGoogleSheets(request).execute()
     return HttpResponse(status=200)
 
 # parse request object for necessary info

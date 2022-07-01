@@ -57,7 +57,7 @@ def google_create_sheet(values, file_name):
         request = GOOGLE_SHEETS_SERVICE.spreadsheets().create(body=spreadsheet)
         response = request.execute()
         spreadsheet_id = response['spreadsheetId']
-        #
+
         end_col = SPREAD_COLS[len(values[0])]
 
         SHEET_RANGE = 'A1:'+ end_col + '1'
