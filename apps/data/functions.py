@@ -132,7 +132,7 @@ class UploadDataToGoogleSheets:
 class RequestAmazonProductAdsReportData(RequestAmzReportData):
 	def __init__(self, request):
 		super().__init__(request)
-		self.report_name = 'product_ads_report'
+		self.report_name = 'productAds'
 
 	def metrics(self):
 		return product_ads_metrics()
