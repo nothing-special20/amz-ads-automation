@@ -1,13 +1,18 @@
 #!/usr/bin/env python
 import os
 import sys
+import socket
 
 if __name__ == '__main__':
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'vyssio.settings')
     if (os.getenv('DEBUG', 'False') == 'True'):
         import debugpy
-        debugpy.listen(("0.0.0.0", 3000))
-        print('Debugger Attached!')
+        try:
+            debugpy.listen(("web", 3000))
+            print('Debugger Attached!')
+        except:
+            'Debugger not attached'
+        # debugpy.wait_for_client()
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
