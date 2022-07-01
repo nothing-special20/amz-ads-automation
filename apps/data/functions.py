@@ -117,13 +117,26 @@ class UploadDataToGoogleSheets:
 	def metrics(self):
 		pass
 
-	def google_append_sheet(self, report_values):
-		return google_append_sheet(report_values, self.google_sheet_id)
+	def download_and_convert_report(self):
+		return download_and_convert_report
+
+	def google_append_sheet(self):
+		return google_append_sheet
 
 	def execute(self):
-		for report_date in last_n_days(60):
-			report_values = download_and_convert_report(self.access_token, self.profile_id, self.report_id, report_date, self.metrics().split(','))
-			google_append_sheet(report_values)
+		access_token = amz_access_token(REFRESH_TOKEN)
+		scheduled_reports = AmzScheduledReports.objects.all().values()
+		for record in scheduled_reports:
+			profile_id = record['PROFILE_ID']
+			report_id = record['REPORT_ID']
+			report_date = record['REPORT_DATE']
+			google_sheet_id = record['GOOGLE_SHEET_ID']
+
+			print(record)
+
+			report_values = self.download_and_convert_report(access_token, profile_id, report_id, report_date, product_ads_metrics().split(','))
+
+			google_append_sheet(report_values, google_sheet_id)
 			time.sleep(3)
 
 
