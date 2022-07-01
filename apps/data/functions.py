@@ -114,8 +114,6 @@ class UploadDataToGoogleSheets:
 		self.access_token = amz_access_token(REFRESH_TOKEN)
 		self.profile_id = amz_profiles(self.access_token)
 
-		self.google_sheet_id = self.google_create_sheet()
-
 	def metrics(self):
 		pass
 
