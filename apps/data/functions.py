@@ -117,11 +117,13 @@ class UploadDataToGoogleSheets:
 	def metrics(self):
 		pass
 
+	#fixthis
 	def download_and_convert_report(self):
-		return download_and_convert_report
+		pass
 
+	#fixthis
 	def google_append_sheet(self):
-		return google_append_sheet
+		pass
 
 	def execute(self):
 		access_token = amz_access_token(REFRESH_TOKEN)
@@ -134,7 +136,7 @@ class UploadDataToGoogleSheets:
 
 			print(record)
 
-			report_values = self.download_and_convert_report(access_token, profile_id, report_id, report_date, product_ads_metrics().split(','))
+			report_values = download_and_convert_report(access_token, profile_id, report_id, report_date, product_ads_metrics().split(','))
 
 			google_append_sheet(report_values, google_sheet_id)
 			time.sleep(3)
