@@ -13,11 +13,11 @@ DOMAIN_URL = os.environ.get('DOMAIN_URL')
 
 
 def build_init_ads_rpt(request):
-    RequestAmazonProductAdsReportData(request)
+    RequestAmazonProductAdsReportData.execute(request)
     return HttpResponse(status=200)
 
 def fetch_init_ads_rpt(request):
-    UploadAmazonProductAdsReportDataToGoogleSheets(request)
+    UploadAmazonProductAdsReportDataToGoogleSheets.execute(request)
     return HttpResponse(status=200)
 
 # parse request object for necessary info
