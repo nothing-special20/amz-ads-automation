@@ -13,6 +13,7 @@ from .models import AmzTokens, AmzScheduledReports
 LWA_CLIENT_ID = os.environ.get("LWA_CLIENT_ID")
 LWA_CLIENT_SECRET = os.environ.get("LWA_CLIENT_SECRET")
 AMZ_API_URL = os.environ.get("AMZ_API_URL")
+REFRESH_TOKEN_REDIRECT_URI_PROTOCOL = os.environ.get("REFRESH_TOKEN_REDIRECT_URI_PROTOCOL")
 
 #gets the user's refresh token, which is used to get the access token to make API calls
 def amz_refresh_token(code, redirect_uri):
@@ -21,7 +22,7 @@ def amz_refresh_token(code, redirect_uri):
     data = {
         "grant_type": grant_type,
         "code": code,
-        "redirect_uri": "https://" + redirect_uri + "/accounts/amazon/login/callback/",
+        "redirect_uri": REFRESH_TOKEN_REDIRECT_URI_PROTOCOL + redirect_uri + "/accounts/amazon/login/callback/",
         "client_id": LWA_CLIENT_ID,
         "client_secret": LWA_CLIENT_SECRET,
     }
