@@ -42,6 +42,7 @@ coreschema==0.0.4
     # via coreapi
 cryptography==37.0.2
     # via pyjwt
+debugpy==1.6.0
 defusedxml==0.7.1
     # via python3-openid
 deprecated==1.2.13
