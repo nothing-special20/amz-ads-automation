@@ -73,8 +73,9 @@ class RequestAmzReportData:
 	"""
 	def __init__(self, request):
 		self.user = request.user.username
-		self.sheet_name = 'data'
-		self.report_name = 'product_ads_report'
+		self.tab_name = 'data'
+		self.sheet_name = 'product_ads_report'
+		self.report_name = ''
 		print(REFRESH_TOKEN)
 		self.access_token = amz_access_token(REFRESH_TOKEN)
 		self.profile_id = amz_profiles(self.access_token)
@@ -83,16 +84,16 @@ class RequestAmzReportData:
 	def metrics(self):
 		pass
 
-	def create_report_and_get_report_id(self):
-		pass
+	def create_report_and_get_report_id(self, report_date):
+		return create_report_and_get_report_id(self.report_name, self.metrics(), report_date, self.access_token, self.profile_id) 
 
-	def store_scheduled_reports(self):
-		pass
+	def store_scheduled_reports(self, report_id, report_date):
+		return store_scheduled_reports(self.user, self.profile_id, report_id, report_date, '')
 
 	def execute(self):
 		for report_date in self.last_n_days:
-			report_id = create_report_and_get_report_id('productAds', self.metrics(), report_date, self.access_token, self.profile_id)
-			store_scheduled_reports(self.user, self.profile_id, report_id, report_date, '')
+			report_id = create_report_and_get_report_id(report_date)
+			store_scheduled_reports(report_id, report_date)
 
 
 class UploadDataToGoogleSheets:
@@ -130,11 +131,12 @@ class RequestAmazonProductAdsReportData(RequestAmzReportData):
 		super().__init__(request)
 		self.report_name = 'product_ads_report'
 
+	def metrics(self):
+		return product_ads_metrics()
+
+
 class UploadAmazonProductAdsReportDataToGoogleSheets(UploadDataToGoogleSheets):
 	def __init__(self, request):
 		super().__init__(request)
 		self.report_name = 'product_ads_report'
-
-	def metrics(self):
-		return product_ads_metrics()
 
