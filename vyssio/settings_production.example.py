@@ -2,7 +2,7 @@ from .settings import *
 import os
 
 
-DEBUG = os.environ.get('DEBUG')
+DEBUG = (os.getenv('DEBUG', 'False') == 'True')
 
 DATABASES = {
     'default': {
