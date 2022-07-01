@@ -118,7 +118,7 @@ def create_report_and_get_report_id(report, metrics, report_date, access_token, 
             # "segment": "query"
     }
     
-    response = requests.post(AMZ_API_URL + "v2/sp/{}/report".format(report), headers=headers, json=data)
+    response = requests.post(AMZ_API_URL + "v2/{}/report".format(report), headers=headers, json=data)
 
     print(response.text)
 
