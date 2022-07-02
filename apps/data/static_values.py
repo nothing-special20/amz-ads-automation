@@ -27,15 +27,15 @@ def product_ads_metrics():
 
 
 def search_term_keyword_metrics():
-    dimensions = []
+    dimensions = ['keywordId']
 
     core_metrics = ['impressions', 'clicks', 'cost']
 
-    keyword_metrics = ['keywordStatus', 'keywordText', 'matchType']
+    keyword_metrics = ['keywordText', 'matchType'] #'keywordStatus',
 
     conversion_metrics = ['attributedConversions1d', 'attributedConversions7d', 'attributedConversions14d', 'attributedConversions30d']
 
-    metrics = [core_metrics, keyword_metrics, conversion_metrics]
+    metrics = [dimensions, core_metrics, keyword_metrics, conversion_metrics]
     metrics = [','.join(x) for x in metrics]
     metrics = ','.join(metrics)
 

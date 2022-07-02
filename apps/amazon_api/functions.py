@@ -145,13 +145,7 @@ def download_and_convert_report(access_token, profile_id, report_id, date_temp, 
     
     # dataframe from json
     report_df = pd.json_normalize(json_data)
-    print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-    print(fields)
-    print(report_df.columns.values)
-    print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
     report_df = report_df[fields]
     report_df["date"] = date_temp
-    # report_values = [list(report_df.columns.values)]
-    # report_values.extend(report_df.values.tolist())
     report_values = report_df.values.tolist()
     return report_values
