@@ -195,6 +195,7 @@ AUTHENTICATION_BACKENDS = (
 )
 
 
+REFRESH_TOKEN_REDIRECT_URI_PROTOCOL = os.environ.get("REFRESH_TOKEN_REDIRECT_URI_PROTOCOL")
 # enable social login
 SOCIALACCOUNT_PROVIDERS = { 
     'google': {
@@ -217,7 +218,7 @@ SOCIALACCOUNT_PROVIDERS = {
             'advertising::campaign_management',
             'profile',
         ],
-        'REDIRECT_URI': 'https://www.vyssio.com/data/handle_login/'
+        'REDIRECT_URI': REFRESH_TOKEN_REDIRECT_URI_PROTOCOL+ 'www.vyssio.com/data/handle_login/'
     }
 }
 
