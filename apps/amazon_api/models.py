@@ -1,11 +1,13 @@
 from django.db import models
 
+from apps.data.models import SecureToken
+
 # Create your models here.
 class AmzTokens(models.Model):
     USER = models.TextField()
     PROFILE_ID = models.TextField()
     PROFILE_NAME = models.TextField()
-    REFRESH_TOKEN = models.TextField()
+    REFRESH_TOKEN = SecureToken()
     LAST_UPDATED = models.DateTimeField()
 
 class AmzScheduledReports(models.Model):

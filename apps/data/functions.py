@@ -18,7 +18,8 @@ RETURN_URL = os.environ.get("RETURN_URL")
 
 
 try:
-    REFRESH_TOKEN = AmzTokens.objects.values().last()['REFRESH_TOKEN']
+	tokens = AmzTokens.objects.values().last()
+	REFRESH_TOKEN = tokens['REFRESH_TOKEN']
 except:
     REFRESH_TOKEN = ''
 
