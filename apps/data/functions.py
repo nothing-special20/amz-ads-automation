@@ -91,7 +91,9 @@ class RequestAmzReportData:
 		return create_report_and_get_report_id(self.report_endpoint, self.metrics(), report_date, self.access_token, self.profile_id) 
 
 	def google_create_sheet(self):
-		return google_create_sheet([self.metrics().split(',')], self.sheet_name)
+		col_names = self.metrics().split(',')
+		col_names.extend(["date"])
+		return google_create_sheet([col_names], self.sheet_name)
 
 	def google_share_file(self):
 		return google_share_file(self.google_sheet_id, self.user)
@@ -137,7 +139,7 @@ class UploadDataToGoogleSheets:
 
 	def execute(self):
 		access_token = amz_access_token(self.refresh_token)
-		scheduled_reports = AmzScheduledReports.objects.filter(USER=self.user).values()
+		scheduled_reports = AmzScheduledReports.objects.filter(USER=self.user, REPORT_ENDPOINT=self.report_endpoint).values()
 		for record in scheduled_reports:
 			profile_id = record['PROFILE_ID']
 			report_id = record['REPORT_ID']
