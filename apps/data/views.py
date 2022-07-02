@@ -40,7 +40,8 @@ def handle_login(request):
 
 def index(request):
     if request.user.is_authenticated:
-        accounts = list(AmzTokens.objects.all().values())
+        user = request.user.username
+        accounts = list(AmzTokens.objects.filter(USER=user).values())
         accounts = [x['PROFILE_NAME'] for x in accounts]
         return render(
                         request, 

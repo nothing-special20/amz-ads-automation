@@ -17,12 +17,15 @@ LWA_CLIENT_SECRET = os.environ.get("LWA_CLIENT_SECRET")
 RETURN_URL = os.environ.get("RETURN_URL")
 
 
-try:
-	tokens = AmzTokens.objects.values().last()
-	REFRESH_TOKEN = tokens['REFRESH_TOKEN']
-except:
-    REFRESH_TOKEN = ''
+def refresh_token(request):
+	user = request.user.username
+	try:
+		tokens = AmzTokens.objects.filter(USER=user).values().last()
+		refresh_token = tokens['REFRESH_TOKEN']
+	except:
+		refresh_token = ''
 
+	return refresh_token
 
 def last_n_days(n):
 	last_n_days = [datetime.datetime.now() - datetime.timedelta(x) for x in range(n)]
@@ -31,41 +34,42 @@ def last_n_days(n):
 
 # https://developer.amazon.com/docs/app-submission-api/python-example.html
 def generate_init_ads_report(request):
-    user = request.user.username
-    sheet_name = 'data'
-    report_name = 'product_ads_report'
-    # metrics = "campaignName,adGroupName,impressions,clicks,cost,asin,sku"
-    metrics = product_ads_metrics()
+	user = request.user.username
+	sheet_name = 'data'
+	report_name = 'product_ads_report'
+	# metrics = "campaignName,adGroupName,impressions,clicks,cost,asin,sku"
+	metrics = product_ads_metrics()
 
-    google_sheet_id = google_create_sheet([['adId', 'cost', 'adGroupName', 'clicks', 'asin', 'impressions', 'sku', 'campaignName', 'date']], report_name)
-    google_share_file(google_sheet_id, "raq5005@gmail.com")
+	refresh_token = refresh_token(request)
 
-    print(REFRESH_TOKEN)
+	google_sheet_id = google_create_sheet([['adId', 'cost', 'adGroupName', 'clicks', 'asin', 'impressions', 'sku', 'campaignName', 'date']], report_name)
+	google_share_file(google_sheet_id, "raq5005@gmail.com")
 
-    access_token = amz_access_token(REFRESH_TOKEN)
-    profile_id = amz_profiles(access_token)
+	access_token = amz_access_token(refresh_token)
+	profile_id = amz_profiles(access_token)
 
-    for report_date in last_n_days:
-        report_id = create_report_and_get_report_id('productAds', metrics, report_date, access_token, profile_id)
+	for report_date in last_n_days:
+		report_id = create_report_and_get_report_id('productAds', metrics, report_date, access_token, profile_id)
 
-        store_scheduled_reports(user, profile_id, report_id, report_date, google_sheet_id)
+	store_scheduled_reports(user, profile_id, report_id, report_date, google_sheet_id)
 
 
 def fetch_init_ads_report(request):
-    access_token = amz_access_token(REFRESH_TOKEN)
-    scheduled_reports = AmzScheduledReports.objects.all().values()
-    for record in scheduled_reports:
-        profile_id = record['PROFILE_ID']
-        report_id = record['REPORT_ID']
-        report_date = record['REPORT_DATE']
-        google_sheet_id = record['GOOGLE_SHEET_ID']
+	refresh_token = refresh_token(request)
+	access_token = amz_access_token(refresh_token)
+	scheduled_reports = AmzScheduledReports.objects.all().values()
+	for record in scheduled_reports:
+		profile_id = record['PROFILE_ID']
+		report_id = record['REPORT_ID']
+		report_date = record['REPORT_DATE']
+		google_sheet_id = record['GOOGLE_SHEET_ID']
 
-        print(record)
+		print(record)
 
-        report_values = download_and_convert_report(access_token, profile_id, report_id, report_date, product_ads_metrics().split(','))
+		report_values = download_and_convert_report(access_token, profile_id, report_id, report_date, product_ads_metrics().split(','))
 
-        google_append_sheet(report_values, google_sheet_id)
-        time.sleep(3)
+		google_append_sheet(report_values, google_sheet_id)
+		time.sleep(3)
     
 
 class RequestAmzReportData:
@@ -74,6 +78,7 @@ class RequestAmzReportData:
 	"""
 	def __init__(self, request, report_endpoint, sheet_name):
 		self.user = request.user.username
+		self.refresh_token = refresh_token(request)
 		self.tab_name = 'data'
 		self.report_endpoint = report_endpoint
 		self.sheet_name = sheet_name
@@ -95,10 +100,7 @@ class RequestAmzReportData:
 		return store_scheduled_reports(self.user, self.profile_id, self.report_endpoint, report_id, report_date, self.google_sheet_id)
 
 	def execute(self):
-		print('uhhhhhhhhhhhhhhh')
-		print(self.report_endpoint)
-		print('uhhhhhhhhhhhhhhh')
-		self.access_token = amz_access_token(REFRESH_TOKEN)
+		self.access_token = amz_access_token(self.refresh_token)
 		self.profile_id = amz_profiles(self.access_token)
 		self.google_sheet_id = self.google_create_sheet()
 		self.google_share_file()
@@ -106,6 +108,7 @@ class RequestAmzReportData:
 		for report_date in self.last_n_days:
 			report_id = self.create_report_and_get_report_id(report_date)
 			self.store_scheduled_reports(report_id, report_date)
+			time.sleep(1)
 
 
 class UploadDataToGoogleSheets:
@@ -117,7 +120,8 @@ class UploadDataToGoogleSheets:
 		self.report_endpoint = report_endpoint
 		self.sheet_name = sheet_name
 		self.report_name = 'product_ads_report'
-		self.access_token = amz_access_token(REFRESH_TOKEN)
+		self.refresh_token = refresh_token(request)
+		self.access_token = amz_access_token(self.refresh_token)
 		self.profile_id = amz_profiles(self.access_token)
 
 	def metrics(self):
@@ -132,20 +136,18 @@ class UploadDataToGoogleSheets:
 		pass
 
 	def execute(self):
-		access_token = amz_access_token(REFRESH_TOKEN)
-		scheduled_reports = AmzScheduledReports.objects.all().values()
+		access_token = amz_access_token(self.refresh_token)
+		scheduled_reports = AmzScheduledReports.objects.filter(USER=self.user).values()
 		for record in scheduled_reports:
 			profile_id = record['PROFILE_ID']
 			report_id = record['REPORT_ID']
 			report_date = record['REPORT_DATE']
 			google_sheet_id = record['GOOGLE_SHEET_ID']
 
-			print(record)
-
 			report_values = download_and_convert_report(access_token, profile_id, report_id, report_date, self.metrics().split(','))
 
 			google_append_sheet(report_values, google_sheet_id)
-			time.sleep(3)
+			time.sleep(1)
 
 """
 	Amazon Product Ads Reports

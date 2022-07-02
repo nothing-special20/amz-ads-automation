@@ -97,7 +97,6 @@ def amz_access_token(refresh_token):
     auth_response = requests.post(amazon_auth_url, data=data)
 
     # Read token from auth response
-    print(auth_response.text)
     auth_response_json = auth_response.json()
     auth_token = auth_response_json["access_token"]
 
