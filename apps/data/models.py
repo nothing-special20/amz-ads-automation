@@ -27,21 +27,23 @@ class SecureToken(models.TextField):
         nonce = cipher.nonce
         ciphertext, tag = cipher.encrypt_and_digest(str.encode(data))
         output = {
-            'ciphertext': str(ciphertext),
-            'nonce': str(nonce),
-            'tag': str(tag)
+            'ciphertext': ciphertext.decode('ISO-8859-1'),
+            'nonce': nonce.decode('ISO-8859-1'),
+            'tag': tag.decode('ISO-8859-1')
             }
+
+        test = str(ciphertext)
 
         output = json.dumps(output)
         return output
 
     def decrypt_data(self, data):
         data = json.loads(data)
-        cipher = AES.new(MY_AES_KEY, AES.MODE_EAX, nonce=data['nonce'].encode('utf-8'))
-        plaintext = cipher.decrypt(data['ciphertext'].encode('utf-8'))
+        cipher = AES.new(MY_AES_KEY, AES.MODE_EAX, nonce=data['nonce'].encode('ISO-8859-1'))
+        plaintext = cipher.decrypt(data['ciphertext'].encode('ISO-8859-1'))
 
         try:
-            cipher.verify(data['tag'].encode('utf-8'))
+            cipher.verify(data['tag'].encode('ISO-8859-1'))
             print("The message is authentic:", plaintext)
             return plaintext
 
