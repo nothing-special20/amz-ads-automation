@@ -7,6 +7,8 @@ from .functions import  RequestAmazonProductAdsReportData, UploadAmazonProductAd
                         RequestAmazonSearchTermKeywordReportData, UploadAmazonSearchTermKeywordReportDataToGoogleSheets, \
                         SignUserUpForReports, RequestAmzReportDataAllReports
 
+from .functions import last_n_days
+
 from apps.amazon_api.models import AmzTokens
 
 LWA_CLIENT_ID = os.environ.get('LWA_CLIENT_ID')
@@ -35,7 +37,9 @@ def sign_up_for_reports(request):
     return HttpResponse(status=200)
 
 def populate_all_reports(request):
-    RequestAmzReportDataAllReports(request).execute()
+    dates = last_n_days(5)
+    for date in dates:
+        RequestAmzReportDataAllReports(request, date).execute()
     return HttpResponse(status=200)
 
 # parse request object for necessary info

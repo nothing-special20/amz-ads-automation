@@ -91,16 +91,16 @@ class SignUserUpForReports:
 		return google_share_file(self.gs_id, self.user)
 
 class RequestAmzReportDataAllReports:
-	def __init__(self, request):
+	def __init__(self, request, report_date):
 		self.request = request
 		self.user = request.user.username
-		self.report_date = last_n_days(1)
+		self.report_date = report_date
 
 	def execute(self):
 		reports_maintained = list(ReportsMaintained.objects.filter(USER=self.user).values())
 
-		RequestAmazonProductAdsReportData(self.request, self.report_date, reports_maintained)
-		RequestAmazonSearchTermKeywordReportData(self.request, self.report_date, reports_maintained)
+		RequestAmazonProductAdsReportData(self.request, self.report_date, reports_maintained).execute()
+		RequestAmazonSearchTermKeywordReportData(self.request, self.report_date, reports_maintained).execute()
 		test = 'lol'
 
 class UploadDataToGoogleSheetsAllReports:
