@@ -3,7 +3,6 @@ from django.http import HttpResponse
 
 import os
 
-# from .functions import generate_init_ads_report, fetch_init_ads_report
 from .functions import RequestAmazonProductAdsReportData, UploadAmazonProductAdsReportDataToGoogleSheets, \
                         RequestAmazonSearchTermKeywordReportData, UploadAmazonSearchTermKeywordReportDataToGoogleSheets
 
