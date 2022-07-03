@@ -83,22 +83,49 @@ class SignUserUpForReports:
 
 	def google_sheets_add_tabs(self):
 		for pair in self.tab_col_pairs():
-			google_sheets_add_tab(self.gs_id, pair['tab_name'], pair['columns'])
+			google_sheets_add_tab(self.gs_id, pair['tab_name'], [[]])
+		
+		# google_sheets_add_tab(self.gs_id, 'Sheet1', pair['columns'])
 
 	def google_share_file(self):
 		return google_share_file(self.gs_id, self.user)
+
+class RequestAmzReportDataAllReports:
+	def __init__(self, request):
+		self.request = request
+		self.user = request.user.username
+		self.report_date = last_n_days(1)
+
+	def execute(self):
+		reports_maintained = list(ReportsMaintained.objects.filter(USER=self.user).values())
+
+		RequestAmazonProductAdsReportData(self.request, self.report_date, reports_maintained)
+		RequestAmazonSearchTermKeywordReportData(self.request, self.report_date, reports_maintained)
+		test = 'lol'
+
+class UploadDataToGoogleSheetsAllReports:
+	def __init__(self, request):
+		self.request = request
+		self.user = request.user.username
+		self.report_date = last_n_days(1)
+
+	def execute(self):
+		AmzTokens.objects.filter(USER=self.user).values().last()
+		RequestAmazonSearchTermKeywordReportData(self.request)
+		UploadAmazonSearchTermKeywordReportDataToGoogleSheets(self.request)
 
 class RequestAmzReportData:
 	"""
 		Constructor
 	"""
-	def __init__(self, request, report_endpoint, sheet_name):
+	def __init__(self, request, report_endpoint, sheet_name, tab_name, report_date, reports_maintained):
 		self.user = request.user.username
 		self.refresh_token = refresh_token(request)
-		self.tab_name = 'data'
+		self.tab_name = tab_name
 		self.report_endpoint = report_endpoint
 		self.sheet_name = sheet_name
-		self.last_n_days = last_n_days(60)
+		self.report_date = report_date
+		self.reports_maintained = reports_maintained
 		
 	def metrics(self):
 		pass
@@ -106,38 +133,34 @@ class RequestAmzReportData:
 	def create_report_and_get_report_id(self, report_date):
 		return create_report_and_get_report_id(self.report_endpoint, self.metrics(), report_date, self.access_token, self.profile_id) 
 
-	def google_create_sheet(self):
-		col_names = self.metrics().split(',')
-		col_names.extend(["date"])
-		return google_create_sheet([col_names], self.sheet_name)
-
-	def google_share_file(self):
-		return google_share_file(self.google_sheet_id, self.user)
+	def gs_id(self):
+		report = [x for x in self.reports_maintained if self.report_endpoint in x['AMAZON_ENDPOINT']]
+		
+		return report[0]['GOOGLE_SHEETS_ID']
 
 	def store_scheduled_reports(self, report_id, report_date):
-		return store_scheduled_reports(self.user, self.profile_id, self.report_endpoint, report_id, report_date, self.google_sheet_id)
+		return store_scheduled_reports(self.user, self.profile_id, self.report_endpoint, report_id, report_date, self.gs_id())
 
 	def execute(self):
 		self.access_token = amz_access_token(self.refresh_token)
 		self.profile_id = amz_profiles(self.access_token)
-		self.google_sheet_id = self.google_create_sheet()
-		self.google_share_file()
 
-		for report_date in self.last_n_days:
-			report_id = self.create_report_and_get_report_id(report_date)
-			self.store_scheduled_reports(report_id, report_date)
-			time.sleep(1)
+		report_id = self.create_report_and_get_report_id(self.report_date)
+		self.store_scheduled_reports(report_id, self.report_date)
+		time.sleep(1)
 
 
 class UploadDataToGoogleSheets:
 	"""
 		Constructor
 	"""
-	def __init__(self, request, report_endpoint, sheet_name):
+	def __init__(self, request, report_endpoint, sheet_name, tab_name, gs_id):
 		self.user = request.user.username
 		self.report_endpoint = report_endpoint
 		self.sheet_name = sheet_name
+		self.tab_name = tab_name
 		self.report_name = 'product_ads_report'
+		self.gs_id = gs_id
 		self.refresh_token = refresh_token(request)
 		self.access_token = amz_access_token(self.refresh_token)
 		self.profile_id = amz_profiles(self.access_token)
@@ -160,21 +183,21 @@ class UploadDataToGoogleSheets:
 			profile_id = record['PROFILE_ID']
 			report_id = record['REPORT_ID']
 			report_date = record['REPORT_DATE']
-			google_sheet_id = record['GOOGLE_SHEET_ID']
 
 			report_values = download_and_convert_report(access_token, profile_id, report_id, report_date, self.metrics().split(','))
 
-			google_append_sheet(report_values, google_sheet_id)
+			google_append_sheet(report_values, self.gs_id)
 			time.sleep(1)
 
 """
 	Amazon Product Ads Reports
 """
 class RequestAmazonProductAdsReportData(RequestAmzReportData):
-	def __init__(self, request):
+	def __init__(self, request, report_date, reports_maintained):
 		report_endpoint = 'sp/productAds'
 		sheet_name = 'product_ads_report'
-		super().__init__(request, report_endpoint, sheet_name)
+		tab_name = ''
+		super().__init__(request, report_endpoint, sheet_name, tab_name, report_date, reports_maintained)
 
 	def metrics(self):
 		return product_ads_metrics()
@@ -194,10 +217,11 @@ class UploadAmazonProductAdsReportDataToGoogleSheets(UploadDataToGoogleSheets):
 	Amazon Search Term Reports
 """
 class RequestAmazonSearchTermKeywordReportData(RequestAmzReportData):
-	def __init__(self, request):
+	def __init__(self, request, report_date, reports_maintained):
 		report_endpoint = 'sp/keywords'
 		sheet_name = 'search_term_keywords'
-		super().__init__(request, report_endpoint, sheet_name)
+		tab_name = 'Sponsored Product Ads'
+		super().__init__(request, report_endpoint, sheet_name, tab_name, report_date, reports_maintained)
 
 	def metrics(self):
 		return search_term_keyword_metrics()
@@ -206,8 +230,9 @@ class RequestAmazonSearchTermKeywordReportData(RequestAmzReportData):
 class UploadAmazonSearchTermKeywordReportDataToGoogleSheets(UploadDataToGoogleSheets):
 	def __init__(self, request):
 		report_endpoint = 'sp/keywords'
-		sheet_name = 'search_term_keywords'
-		super().__init__(request, report_endpoint, sheet_name)
+		sheet_name = 'Sponsored Products Keywords'
+		tab_name = ''
+		super().__init__(request, report_endpoint, sheet_name, tab_name)
 	
 	def metrics(self):
 		return search_term_keyword_metrics()

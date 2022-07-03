@@ -5,7 +5,7 @@ import os
 
 from .functions import  RequestAmazonProductAdsReportData, UploadAmazonProductAdsReportDataToGoogleSheets, \
                         RequestAmazonSearchTermKeywordReportData, UploadAmazonSearchTermKeywordReportDataToGoogleSheets, \
-                        SignUserUpForReports
+                        SignUserUpForReports, RequestAmzReportDataAllReports
 
 from apps.amazon_api.models import AmzTokens
 
@@ -32,6 +32,10 @@ def fetch_init_search_term_rpt(request):
 def sign_up_for_reports(request):
     user = request.user.username
     SignUserUpForReports(request, user, [], 'gs_file_name').execute()
+    return HttpResponse(status=200)
+
+def populate_all_reports(request):
+    RequestAmzReportDataAllReports(request).execute()
     return HttpResponse(status=200)
 
 # parse request object for necessary info

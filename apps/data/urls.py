@@ -13,5 +13,6 @@ urlpatterns = [
     path('fetch_init_ads_rpt/', views.fetch_init_ads_rpt, name='fetch_init_ads_rpt'),
     path('build_init_search_term_keyword_rpt/', views.build_init_search_term_rpt, name='build_init_search_term_keyword_rpt'),
     path('fetch_init_search_term_keyword_rpt/', views.fetch_init_search_term_rpt, name='fetch_init_search_term_keyword_rpt'),
-    path('sign_up_for_reports/', views.sign_up_for_reports, name='sign_up_for_reports')
+    path('sign_up_for_reports/', views.sign_up_for_reports, name='sign_up_for_reports'),
+    path('populate_all_reports/', views.populate_all_reports, name='populate_all_reports')
 ]
