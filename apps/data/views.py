@@ -14,23 +14,6 @@ from apps.amazon_api.models import AmzTokens
 LWA_CLIENT_ID = os.environ.get('LWA_CLIENT_ID')
 DOMAIN_URL = os.environ.get('DOMAIN_URL')
 
-
-def build_init_ads_rpt(request):
-    RequestAmazonProductAdsReportData(request).execute()
-    return HttpResponse(status=200)
-
-def fetch_init_ads_rpt(request):
-    UploadAmazonProductAdsReportDataToGoogleSheets(request).execute()
-    return HttpResponse(status=200)
-
-def build_init_search_term_rpt(request):
-    RequestAmazonSearchTermKeywordReportData(request).execute()
-    return HttpResponse(status=200)
-
-def fetch_init_search_term_rpt(request):
-    UploadAmazonSearchTermKeywordReportDataToGoogleSheets(request).execute()
-    return HttpResponse(status=200)
-
 def sign_up_for_reports(request):
     user = request.user.username
     SignUserUpForReports(request, user, [], 'gs_file_name').execute()
