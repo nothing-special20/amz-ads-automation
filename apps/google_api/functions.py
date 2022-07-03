@@ -33,6 +33,9 @@ def google_append_sheet(values, spreadsheet_id, tab_name=''):
     try:
         end_col = SPREAD_COLS[len(values[0])]
 
+        if tab_name!='':
+            tab_name = "'" + tab_name + "'!"
+            
         SHEET_RANGE = tab_name + 'A1:'+ end_col + GOOGLE_SHEET_MAX_RANGE
 
         # Call the Sheets API

@@ -5,7 +5,7 @@ import os
 
 from .functions import  RequestAmazonProductAdsReportData, UploadAmazonProductAdsReportDataToGoogleSheets, \
                         RequestAmazonSearchTermKeywordReportData, UploadAmazonSearchTermKeywordReportDataToGoogleSheets, \
-                        SignUserUpForReports, RequestAmzReportDataAllReports
+                        SignUserUpForReports, RequestAmzReportDataAllReports, UploadDataToGoogleSheetsAllReports
 
 from .functions import last_n_days
 
@@ -40,6 +40,10 @@ def populate_all_reports(request):
     dates = last_n_days(5)
     for date in dates:
         RequestAmzReportDataAllReports(request, date).execute()
+    return HttpResponse(status=200)
+
+def upload_all_reports_to_gs(request):
+    UploadDataToGoogleSheetsAllReports(request).execute()
     return HttpResponse(status=200)
 
 # parse request object for necessary info

@@ -14,5 +14,6 @@ urlpatterns = [
     path('build_init_search_term_keyword_rpt/', views.build_init_search_term_rpt, name='build_init_search_term_keyword_rpt'),
     path('fetch_init_search_term_keyword_rpt/', views.fetch_init_search_term_rpt, name='fetch_init_search_term_keyword_rpt'),
     path('sign_up_for_reports/', views.sign_up_for_reports, name='sign_up_for_reports'),
-    path('populate_all_reports/', views.populate_all_reports, name='populate_all_reports')
+    path('populate_all_reports/', views.populate_all_reports, name='populate_all_reports'),
+    path('upload_all_reports_to_gs', views.upload_all_reports_to_gs, name='upload_all_reports_to_gs')
 ]

@@ -19,7 +19,7 @@ def product_ads_metrics():
                             'attributedUnitsOrderedNewToBrandPercentage14d'
                             ]
 
-    metrics = [dimensions, core_metrics, sales_metrics, order_metrics, conversion_metrics, new_to_brand_metrics]
+    metrics = [dimensions, core_metrics, sales_metrics, order_metrics, conversion_metrics]
     metrics = [','.join(x) for x in metrics]
     metrics = ','.join(metrics)
 

@@ -67,5 +67,13 @@
     >
       Populate All Reports
   </button>
+  <button 
+    type="submit" 
+    onclick="location.href='{% url 'data:upload_all_reports_to_gs' %}'" 
+    name='mybtn2'
+    class="btn btn-lg btn-primary"
+    >
+      Upload All Reports to Google Sheets
+  </button>
 </section>
 {% endblock %}
