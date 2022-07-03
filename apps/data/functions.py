@@ -5,10 +5,11 @@ import numpy as np
 import datetime
 import time
 
+from .models import ReportsMaintained
 from apps.amazon_api.models import AmzTokens, AmzScheduledReports
 
-from apps.amazon_api.functions import amz_access_token, amz_profiles, download_and_convert_report, create_report_and_get_report_id, store_scheduled_reports
-from apps.google_api.functions import google_append_sheet, google_create_sheet, google_share_file
+from apps.amazon_api.functions import amz_access_token, amz_profiles, download_and_convert_report, create_report_and_get_report_id, store_scheduled_reports, amz_profile_details
+from apps.google_api.functions import google_append_sheet, google_create_sheet, google_share_file, google_sheets_add_tab
 
 from .static_values import product_ads_metrics, search_term_keyword_metrics
 
@@ -32,6 +33,60 @@ def last_n_days(n):
 	last_n_days = [x.year * 10000 + x.month * 100 + x.day for x in last_n_days]
 	return last_n_days
 
+class SignUserUpForReports:
+	def __init__(self, request, user, metrics, gs_file_name):
+		self.refresh_token = refresh_token(request)
+		self.user = user
+		self.gs_file_name = gs_file_name
+		self.metrics = metrics
+
+	def execute(self):
+		self.access_token = amz_access_token(self.refresh_token)
+		self.amz_profile_id = amz_profiles(self.access_token)
+		self.amz_profile_name = amz_profile_details(self.access_token, self.amz_profile_id)['accountInfo']['name']
+		self.gs_id = self.google_create_sheet()
+		self.google_sheets_add_tabs()
+		self.google_share_file()
+		self.sign_up_for_report('sp/productAds', 'Sponsored Products Ads')
+		self.sign_up_for_report('sp/keywords', 'Sponsored Products Keywords')
+
+	def sign_up_for_report(self, amz_endpoint, gs_tab_name):
+		doc = ReportsMaintained(
+			USER = self.user,
+			AMAZON_PROFILE_ID = self.amz_profile_id,
+			AMAZON_PROFILE_NAME = self.amz_profile_name,
+			AMAZON_ENDPOINT = amz_endpoint,
+			GOOGLE_SHEETS_ID = self.gs_id,
+			GOOGLE_SHEETS_FILE_NAME = self.gs_file_name,
+			GOOGLE_SHEETS_TAB_NAME = gs_tab_name,
+			DATE_CREATED = datetime.datetime.now()
+		)
+		doc.save()
+
+	def tab_col_pairs(self):
+		output = [
+			{
+				'tab_name': 'Sponsored Product Ads',
+				'columns': [['Sponsored_Product_Ads']]
+			},
+			{
+				'tab_name': 'Sponsored Products Keywords',
+				'columns': [['Sponsored_Products_Keywords']]
+			}
+		]
+		return output
+
+	def google_create_sheet(self):
+		col_names = self.metrics
+		col_names.extend(["date"])
+		return google_create_sheet([col_names], self.gs_file_name)
+
+	def google_sheets_add_tabs(self):
+		for pair in self.tab_col_pairs():
+			google_sheets_add_tab(self.gs_id, pair['tab_name'], pair['columns'])
+
+	def google_share_file(self):
+		return google_share_file(self.gs_id, self.user)
 
 class RequestAmzReportData:
 	"""

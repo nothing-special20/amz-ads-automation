@@ -3,8 +3,9 @@ from django.http import HttpResponse
 
 import os
 
-from .functions import RequestAmazonProductAdsReportData, UploadAmazonProductAdsReportDataToGoogleSheets, \
-                        RequestAmazonSearchTermKeywordReportData, UploadAmazonSearchTermKeywordReportDataToGoogleSheets
+from .functions import  RequestAmazonProductAdsReportData, UploadAmazonProductAdsReportDataToGoogleSheets, \
+                        RequestAmazonSearchTermKeywordReportData, UploadAmazonSearchTermKeywordReportDataToGoogleSheets, \
+                        SignUserUpForReports
 
 from apps.amazon_api.models import AmzTokens
 
@@ -26,6 +27,11 @@ def build_init_search_term_rpt(request):
 
 def fetch_init_search_term_rpt(request):
     UploadAmazonSearchTermKeywordReportDataToGoogleSheets(request).execute()
+    return HttpResponse(status=200)
+
+def sign_up_for_reports(request):
+    user = request.user.username
+    SignUserUpForReports(request, user, [], 'gs_file_name').execute()
     return HttpResponse(status=200)
 
 # parse request object for necessary info

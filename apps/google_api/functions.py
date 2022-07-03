@@ -29,11 +29,11 @@ SPREAD_COLS.extend(['a' + x for x in SPREAD_COLS_BASE])
 
 GOOGLE_SHEETS_SERVICE = build('sheets', 'v4', credentials=creds)
 
-def google_append_sheet(values, spreadsheet_id):
+def google_append_sheet(values, spreadsheet_id, tab_name=''):
     try:
         end_col = SPREAD_COLS[len(values[0])]
 
-        SHEET_RANGE = 'A1:'+ end_col + GOOGLE_SHEET_MAX_RANGE
+        SHEET_RANGE = tab_name + 'A1:'+ end_col + GOOGLE_SHEET_MAX_RANGE
 
         # Call the Sheets API
         GOOGLE_SHEETS_SERVICE.spreadsheets().values().append(spreadsheetId=spreadsheet_id, 
@@ -69,6 +69,32 @@ def google_create_sheet(values, file_name):
                                                 body={"values": values}).execute()
 
         return spreadsheet_id
+
+    except HttpError as err:
+        print(err)
+
+def google_sheets_add_tab(gs_file_id, tab_name, col_names):
+    try:
+        body = {
+            'requests': [{
+                'addSheet': {
+                    'properties': {
+                        'title': tab_name,
+                    }
+                }
+            }]
+            }
+        request = GOOGLE_SHEETS_SERVICE.spreadsheets().batchUpdate(body=body, spreadsheetId=gs_file_id)
+        request.execute()
+
+        end_col = SPREAD_COLS[len(col_names[0])]
+        SHEET_RANGE = tab_name + '!A1:'+ end_col + '1'
+
+        # Call the Sheets API
+        GOOGLE_SHEETS_SERVICE.spreadsheets().values().update(spreadsheetId=gs_file_id, 
+                                                range=SHEET_RANGE, 
+                                                valueInputOption="USER_ENTERED", 
+                                                body={"values": col_names}).execute()
 
     except HttpError as err:
         print(err)

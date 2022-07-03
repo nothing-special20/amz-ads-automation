@@ -32,8 +32,6 @@ class SecureToken(models.TextField):
             'tag': tag.decode('ISO-8859-1')
             }
 
-        test = str(ciphertext)
-
         output = json.dumps(output)
         return output
 
@@ -61,3 +59,27 @@ class SecureToken(models.TextField):
     # decrypt data with your own function
         dc = self.decrypt_data(value)
         return dc
+
+class ReportsMaintained(models.Model):
+    USER = models.TextField()
+    AMAZON_PROFILE_ID = models.TextField()
+    AMAZON_PROFILE_NAME = models.TextField()
+    AMAZON_ENDPOINT = models.TextField()
+    REPORT_NAME = models.TextField()
+    GOOGLE_SHEETS_ID = models.TextField()
+    GOOGLE_SHEETS_FILE_NAME = models.TextField()
+    GOOGLE_SHEETS_TAB_NAME = models.TextField()
+    DATE_CREATED = models.DateTimeField()
+
+class ReportsRun(models.Model):
+    USER = models.TextField()
+    AMAZON_PROFILE_ID = models.TextField()
+    AMAZON_PROFILE_NAME = models.TextField()
+    AMAZON_ENDPOINT = models.TextField()
+    GOOGLE_SHEETS_ID = models.TextField()
+    GOOGLE_SHEETS_FILE_NAME = models.TextField()
+    GOOGLE_SHEETS_TAB_NAME = models.TextField()
+    ENDPOINT_EVALUATION_DATE = models.IntegerField()
+    STATUS = models.TextField()
+    DATE_ENDPOINT_QUERIED = models.DateTimeField()
+    DATE_GOOGLE_SHEETS_UPDATED = models.DateTimeField()
