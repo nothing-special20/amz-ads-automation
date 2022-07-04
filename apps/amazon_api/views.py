@@ -17,18 +17,14 @@ def handle_login(request):
     user = request.user.username
 
     if request.method == 'GET':
-        print(request)
         parsed_url = urlparse(url)
         redirect_uri = parsed_url.netloc
         code = parse_qs(parsed_url.query)['code'][0]
-        print('~~~~' + code)
         tokens = amz_refresh_token(code, redirect_uri)
-        print(tokens)
         refresh_token = tokens['refresh_token']
         access_token = tokens['access_token']
         amz_profile_id = amz_profiles(access_token)
         profile_details = amz_profile_details(access_token, amz_profile_id)
-        print(profile_details)
         profile_name = profile_details['accountInfo']['name']
         store_refresh_token(user, amz_profile_id, profile_name, refresh_token)
 
