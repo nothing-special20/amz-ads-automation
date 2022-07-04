@@ -42,7 +42,6 @@ class SecureToken(models.TextField):
 
         try:
             cipher.verify(data['tag'].encode('ISO-8859-1'))
-            print("The message is authentic:", plaintext)
             return plaintext
 
         except ValueError:
