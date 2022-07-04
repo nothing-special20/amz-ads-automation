@@ -5,6 +5,7 @@ import numpy as np
 import datetime
 import time
 from celery import Celery
+import re
 
 from .models import ReportsMaintained
 from apps.amazon_api.models import AmzTokens, AmzScheduledReports
@@ -138,8 +139,11 @@ class RequestAmzReportData:
 	def metrics(self):
 		pass
 
+	def api_request_body(self):
+		pass
+
 	def create_report_and_get_report_id(self, report_date):
-		return create_report_and_get_report_id(self.report_endpoint, self.metrics(), report_date, self.access_token, self.profile_id) 
+		return create_report_and_get_report_id(self.report_endpoint, self.api_request_body(), self.access_token, self.profile_id) 
 
 	def gs_id(self):
 		report = [x for x in self.reports_maintained if self.report_endpoint in x['AMAZON_ENDPOINT']]
@@ -194,7 +198,7 @@ class UploadDataToGoogleSheets:
 			report_date = record['REPORT_DATE']
 			gs_id = record['GOOGLE_SHEET_ID']
 
-			report_values = download_and_convert_report(access_token, profile_id, report_id, report_date, self.metrics().split(','))
+			report_values = download_and_convert_report(access_token, profile_id, report_id, report_date, re.sub('\\*','',self.metrics()).split(','))
 			report_values = self.data_enrichment(report_values)
 
 			google_append_sheet(report_values, gs_id, self.tab_name)
@@ -212,6 +216,12 @@ class RequestAmazonProductAdsReportData(RequestAmzReportData):
 
 	def metrics(self):
 		return product_ads_metrics()
+
+	def api_request_body(self):
+		return {
+			"reportDate": str(self.report_date),
+			"metrics": re.sub(',[A-Za-z]{1,50}\\*', '', self.metrics()),
+		}
 
 class UploadAmazonProductAdsReportDataToGoogleSheets(UploadDataToGoogleSheets):
 	def __init__(self, request):
@@ -248,6 +258,13 @@ class RequestAmazonSponsoredBrandAdsReportData(RequestAmzReportData):
 	def metrics(self):
 		return sponsored_brands_ads_metrics()
 
+	
+	def api_request_body(self):
+		return {
+			"reportDate": str(self.report_date),
+			"metrics": re.sub(',[A-Za-z]{1,50}\\*', '', self.metrics()),
+		}
+
 class UploadAmazonSponsoredBrandAdsReportDataToGoogleSheets(UploadDataToGoogleSheets):
 	def __init__(self, request):
 		report_endpoint = 'hsa/adGroups'
@@ -274,6 +291,13 @@ class RequestAmazonSearchTermKeywordReportData(RequestAmzReportData):
 
 	def metrics(self):
 		return search_term_keyword_metrics()
+
+	def api_request_body(self):
+		return {
+			"reportDate": str(self.report_date),
+			"metrics": re.sub(',[A-Za-z]{1,50}\\*', '', self.metrics()),
+			"segment": "query"
+		}
 
 class UploadAmazonSearchTermKeywordReportDataToGoogleSheets(UploadDataToGoogleSheets):
 	def __init__(self, request):

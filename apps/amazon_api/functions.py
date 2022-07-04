@@ -5,6 +5,7 @@ import pandas as pd
 import io
 import json
 import gzip
+import re
 
 app_name = 'api'
 
@@ -104,22 +105,15 @@ def amz_access_token(refresh_token):
 
     return auth_token_header_value
 
-def create_report_and_get_report_id(report_endpoint, metrics, report_date, access_token, profile_id):
+def create_report_and_get_report_id(report_endpoint, api_request_body, access_token, profile_id):
     headers = {
         'Amazon-Advertising-API-ClientId': LWA_CLIENT_ID,
         'Amazon-Advertising-API-Scope': profile_id,
         'Authorization': access_token,
         'Content-Type': 'application/json'
     }
-
-    data = {
-            # "stateFilter": "enabled",
-            "reportDate": str(report_date),
-            "metrics": metrics,
-            # "segment": "query"
-    }
     
-    response = requests.post(AMZ_API_URL + "v2/{}/report".format(report_endpoint), headers=headers, json=data)
+    response = requests.post(AMZ_API_URL + "v2/{}/report".format(report_endpoint), headers=headers, json=api_request_body)
 
     print(response.text)
 
@@ -133,6 +127,8 @@ def download_and_convert_report(access_token, profile_id, report_id, date_temp, 
         'Authorization': access_token,
         'Content-Type': 'application/json'
     }
+
+    fields = [re.sub('\\*', '', x) for x in fields]
     
     response = requests.get(f"{AMZ_API_URL}v2/reports/{report_id}/download", headers=headers)
     
