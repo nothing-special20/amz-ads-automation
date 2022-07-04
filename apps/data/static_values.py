@@ -74,7 +74,7 @@ def search_term_keyword_metrics():
 
     core_metrics = ['impressions', 'clicks', 'cost']
 
-    keyword_metrics = ['keywordText', 'matchType', 'keywordText'] #'keywordStatus',
+    keyword_metrics = ['keywordText', 'matchType', 'keywordText', 'query*'] #, 'keywordStatus'
 
     conversion_metrics = ['attributedConversions1d', 'attributedConversions7d', 'attributedConversions14d', 'attributedConversions30d',
                             'attributedConversions1d', 'attributedConversions7dSameSKU', 'attributedConversions14dSameSKU',
