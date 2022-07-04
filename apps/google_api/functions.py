@@ -47,8 +47,8 @@ def google_append_sheet(values, spreadsheet_id, tab_name=''):
         if not values:
             print('No data found.')
 
-    except HttpError as err:
-        print(err)
+    except Exception as e:
+        print(e)
 
 def google_create_sheet(values, file_name):
     try:
@@ -84,6 +84,31 @@ def google_sheets_add_tab(gs_file_id, tab_name, col_names):
                     'properties': {
                         'title': tab_name,
                     }
+                }
+            }]
+            }
+        request = GOOGLE_SHEETS_SERVICE.spreadsheets().batchUpdate(body=body, spreadsheetId=gs_file_id)
+        request.execute()
+
+        end_col = SPREAD_COLS[len(col_names[0])]
+        SHEET_RANGE = tab_name + '!A1:'+ end_col + '1'
+
+        # Call the Sheets API
+        GOOGLE_SHEETS_SERVICE.spreadsheets().values().update(spreadsheetId=gs_file_id, 
+                                                range=SHEET_RANGE, 
+                                                valueInputOption="USER_ENTERED", 
+                                                body={"values": col_names}).execute()
+
+    except HttpError as err:
+        print(err)
+
+
+def google_sheets_rm_tab(gs_file_id, tab_name, col_names):
+    try:
+        body = {
+            'requests': [{
+                'deleteSheet': {
+                    'sheetId': '0'
                 }
             }]
             }

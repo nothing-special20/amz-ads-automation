@@ -141,6 +141,12 @@ def download_and_convert_report(access_token, profile_id, report_id, date_temp, 
     
     # dataframe from json
     report_df = pd.json_normalize(json_data)
-    report_df = report_df[fields]
-    report_df["date"] = date_temp
+    try:
+        report_df = report_df[fields]
+        report_df["date"] = date_temp
+    except Exception as e:
+        print(e)
+    
     return report_df
+    
+    
