@@ -12,7 +12,7 @@ from apps.amazon_api.models import AmzTokens, AmzScheduledReports
 from apps.amazon_api.functions import amz_access_token, amz_profiles, download_and_convert_report, create_report_and_get_report_id, store_scheduled_reports, amz_profile_details
 from apps.google_api.functions import google_append_sheet, google_create_sheet, google_share_file, google_sheets_add_tab
 
-from .static_values import product_ads_metrics, search_term_keyword_metrics
+from .static_values import product_ads_metrics, search_term_keyword_metrics, sponsored_brands_ads_metrics
 
 LWA_CLIENT_ID = os.environ.get("LWA_CLIENT_ID")
 LWA_CLIENT_SECRET = os.environ.get("LWA_CLIENT_SECRET")
@@ -50,6 +50,7 @@ class SignUserUpForReports:
 		self.google_sheets_add_tabs()
 		self.google_share_file()
 		self.sign_up_for_report('sp/productAds', 'Sponsored Products Ads')
+		self.sign_up_for_report('hsa/adGroups', 'Sponsored Brand Ads')
 		self.sign_up_for_report('sp/keywords', 'Sponsored Products Keywords')
 
 	def sign_up_for_report(self, amz_endpoint, gs_tab_name):
@@ -69,18 +70,22 @@ class SignUserUpForReports:
 		output = [
 			{
 				'tab_name': 'Sponsored Products Ads',
-				'columns': [(product_ads_metrics() + ',date').split(',')]
+				'columns': [(product_ads_metrics() + ',date,sku_bucket').split(',')]
 			},
 			{
 				'tab_name': 'Sponsored Products Keywords',
 				'columns': [(search_term_keyword_metrics() + ',date').split(',')]
+			},
+			{
+				'tab_name': 'Sponsored Brand Ads',
+				'columns': [(search_term_keyword_metrics() + ',date,sku_bucket').split(',')]
 			}
 		]
 		return output
 
 	def google_create_sheet(self):
 		col_names = self.metrics
-		col_names.extend(["date"])
+		# col_names.extend(["date"])
 		return google_create_sheet([col_names], self.gs_file_name)
 
 	def google_sheets_add_tabs(self):
@@ -103,6 +108,8 @@ class RequestAmzReportDataAllReports:
 
 		RequestAmazonProductAdsReportData(self.request, self.report_date, reports_maintained).execute()
 		RequestAmazonSearchTermKeywordReportData(self.request, self.report_date, reports_maintained).execute()
+		# Currently I don't have access to a seller account with this data
+		RequestAmazonSponsoredBrandAdsReportData(self.request, self.report_date, reports_maintained).execute()
 
 class UploadDataToGoogleSheetsAllReports:
 	def __init__(self, request):
@@ -112,6 +119,8 @@ class UploadDataToGoogleSheetsAllReports:
 	def execute(self):
 		UploadAmazonProductAdsReportDataToGoogleSheets(self.request).execute()
 		UploadAmazonSearchTermKeywordReportDataToGoogleSheets(self.request).execute()
+		# Currently I don't have access to a seller account with this data
+		# UploadAmazonSponsoredBrandAdsReportDataToGoogleSheets(self.request).execute()
 
 class RequestAmzReportData:
 	"""
@@ -173,6 +182,9 @@ class UploadDataToGoogleSheets:
 	def google_append_sheet(self):
 		pass
 
+	def data_enrichment(self, data):
+		return data.values.tolist()
+
 	def execute(self):
 		access_token = amz_access_token(self.refresh_token)
 		scheduled_reports = list(AmzScheduledReports.objects.filter(USER=self.user, REPORT_ENDPOINT=self.report_endpoint).values())
@@ -183,6 +195,7 @@ class UploadDataToGoogleSheets:
 			gs_id = record['GOOGLE_SHEET_ID']
 
 			report_values = download_and_convert_report(access_token, profile_id, report_id, report_date, self.metrics().split(','))
+			report_values = self.data_enrichment(report_values)
 
 			google_append_sheet(report_values, gs_id, self.tab_name)
 			time.sleep(1)
@@ -209,6 +222,44 @@ class UploadAmazonProductAdsReportDataToGoogleSheets(UploadDataToGoogleSheets):
 	
 	def metrics(self):
 		return product_ads_metrics()
+
+	def data_enrichment(self, data):
+		enrich_data = {
+			'sku': 'QC-XJBZ-S8G2',
+			'sku_bucket': 'treat bags'
+		}
+
+		enrich_data = pd.DataFrame([enrich_data])
+
+		data = pd.merge(data, enrich_data)
+
+		return data.values.tolist()
+
+"""
+	Amazon Product Ads Reports
+"""
+class RequestAmazonSponsoredBrandAdsReportData(RequestAmzReportData):
+	def __init__(self, request, report_date, reports_maintained):
+		report_endpoint = 'hsa/adGroups'
+		sheet_name = 'product_brand_ads_report'
+		tab_name = 'Sponsored Brand Ads'
+		super().__init__(request, report_endpoint, sheet_name, tab_name, report_date, reports_maintained)
+
+	def metrics(self):
+		return sponsored_brands_ads_metrics()
+
+class UploadAmazonSponsoredBrandAdsReportDataToGoogleSheets(UploadDataToGoogleSheets):
+	def __init__(self, request):
+		report_endpoint = 'hsa/adGroups'
+		sheet_name = 'product_brand_ads_report'
+		tab_name = 'Sponsored Brand Ads'
+		super().__init__(request, report_endpoint, sheet_name, tab_name)
+	
+	def metrics(self):
+		return sponsored_brands_ads_metrics()
+
+	def data_enrichment(self, data):
+		return data.values.tolist()
 
 
 """

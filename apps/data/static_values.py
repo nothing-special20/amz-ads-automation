@@ -94,6 +94,37 @@ def search_term_keyword_metrics():
     return metrics
 
 
+def sponsored_brands_ads_metrics():
+    dimensions = ['campaignId', 'campaignName', 'campaignStatus', 'adGroupId', 'adGroupName']
+
+    core_metrics = ['impressions', 'clicks', 'cost', 'campaignBudget', 'campaignBudgetType', 'currency', 
+                    'attributedDetailPageViewsClicks14d', 'unitsSold14d', 'dpv14d']
+
+
+    sales_metrics = ['attributedSales1d', 'attributedSales7d', 'attributedSales14d', 'attributedSales30d',
+                       'attributedSales1dSameSKU', 'attributedSales7dSameSKU', 'attributedSales14dSameSKU', 'attributedSales30dSameSKU']
+
+    order_metrics = ['attributedUnitsOrdered1d', 'attributedUnitsOrdered7d', 'attributedUnitsOrdered14d', 'attributedUnitsOrdered30d',
+                       'attributedUnitsOrdered1dSameSKU', 'attributedUnitsOrdered7dSameSKU', 'attributedUnitsOrdered14dSameSKU', 'attributedUnitsOrdered30dSameSKU'] 
+
+    conversion_metrics = ['attributedConversions1d', 'attributedConversions7d', 'attributedConversions14d', 'attributedConversions30d',
+                           'attributedConversions1dSameSKU', 'attributedConversions7dSameSKU', 'attributedConversions14dSameSKU','attributedConversions30dSameSKU']
+
+    new_to_brand_metrics = ['attributedOrderRateNewToBrand14d', 
+                            'attributedOrdersNewToBrand14d', 
+                            'attributedOrdersNewToBrandPercentage14d',
+                            'attributedSalesNewToBrand14d',
+                            'attributedSalesNewToBrandPercentage14d',
+                            'attributedUnitsOrderedNewToBrand14d',
+                            'attributedUnitsOrderedNewToBrandPercentage14d'
+                            ]
+
+
+    metrics = [dimensions, core_metrics, sales_metrics, order_metrics, conversion_metrics, new_to_brand_metrics]
+    metrics = [','.join(x) for x in metrics]
+    metrics = ','.join(metrics)
+
+    return metrics
 
 def search_term_target_metrics():
     core_metrics = ['impressions', 'clicks', 'cost', 'vctr', 'vtr']
