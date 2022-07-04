@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 import datetime
 import time
+from celery import Celery
 
 from .models import ReportsMaintained
 from apps.amazon_api.models import AmzTokens, AmzScheduledReports
@@ -17,6 +18,7 @@ LWA_CLIENT_ID = os.environ.get("LWA_CLIENT_ID")
 LWA_CLIENT_SECRET = os.environ.get("LWA_CLIENT_SECRET")
 RETURN_URL = os.environ.get("RETURN_URL")
 
+# app = Celery('functions')
 
 def refresh_token(request):
 	user = request.user.username
@@ -101,7 +103,6 @@ class RequestAmzReportDataAllReports:
 
 		RequestAmazonProductAdsReportData(self.request, self.report_date, reports_maintained).execute()
 		RequestAmazonSearchTermKeywordReportData(self.request, self.report_date, reports_maintained).execute()
-		test = 'lol'
 
 class UploadDataToGoogleSheetsAllReports:
 	def __init__(self, request):
@@ -109,8 +110,6 @@ class UploadDataToGoogleSheetsAllReports:
 		self.user = request.user.username
 
 	def execute(self):
-		# scheduled_reports = AmzTokens.objects.filter(USER=self.user).values().last()
-		# for report in scheduled_reports:
 		UploadAmazonProductAdsReportDataToGoogleSheets(self.request).execute()
 		UploadAmazonSearchTermKeywordReportDataToGoogleSheets(self.request).execute()
 
@@ -148,7 +147,6 @@ class RequestAmzReportData:
 		report_id = self.create_report_and_get_report_id(self.report_date)
 		self.store_scheduled_reports(report_id, self.report_date)
 		time.sleep(1)
-
 
 class UploadDataToGoogleSheets:
 	"""
@@ -202,7 +200,6 @@ class RequestAmazonProductAdsReportData(RequestAmzReportData):
 	def metrics(self):
 		return product_ads_metrics()
 
-
 class UploadAmazonProductAdsReportDataToGoogleSheets(UploadDataToGoogleSheets):
 	def __init__(self, request):
 		report_endpoint = 'sp/productAds'
@@ -226,7 +223,6 @@ class RequestAmazonSearchTermKeywordReportData(RequestAmzReportData):
 
 	def metrics(self):
 		return search_term_keyword_metrics()
-
 
 class UploadAmazonSearchTermKeywordReportDataToGoogleSheets(UploadDataToGoogleSheets):
 	def __init__(self, request):

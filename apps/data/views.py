@@ -3,9 +3,7 @@ from django.http import HttpResponse
 
 import os
 
-from .functions import  RequestAmazonProductAdsReportData, UploadAmazonProductAdsReportDataToGoogleSheets, \
-                        RequestAmazonSearchTermKeywordReportData, UploadAmazonSearchTermKeywordReportDataToGoogleSheets, \
-                        SignUserUpForReports, RequestAmzReportDataAllReports, UploadDataToGoogleSheetsAllReports
+from .functions import SignUserUpForReports, RequestAmzReportDataAllReports, UploadDataToGoogleSheetsAllReports
 
 from .functions import last_n_days
 
