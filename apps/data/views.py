@@ -18,7 +18,7 @@ def sign_up_for_reports(request):
     return HttpResponse(status=200)
 
 def populate_all_reports(request):
-    dates = last_n_days(5)
+    dates = last_n_days(60)
     for date in dates:
         RequestAmzReportDataAllReports(request, date).execute()
     return HttpResponse(status=200)
@@ -39,8 +39,11 @@ def handle_login(request):
 def index(request):
     if request.user.is_authenticated:
         user = request.user.username
-        accounts = list(AmzTokens.objects.filter(USER=user).values())
-        accounts = [x['PROFILE_NAME'] for x in accounts]
+        try:
+            accounts = list(AmzTokens.objects.filter(USER=user).values())
+            accounts = [x['PROFILE_NAME'] for x in accounts]
+        except:
+            accounts = []
         return render(
                         request, 
                         'data/my_ads_accounts.html', 
