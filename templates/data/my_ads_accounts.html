@@ -13,7 +13,9 @@
   <p>Linked Accounts</p>
   <div>
     {% for account in ACCOUNTS %}
-      <li>{{ account }}</li>
+      <li>
+        <a href={{ account.GOOGLE_SHEETS_URL }} target=”_blank”>{{ account.AMAZON_PROFILE_NAME }}</a>
+      </li>
     {% endfor %}
   </div>
   <br>

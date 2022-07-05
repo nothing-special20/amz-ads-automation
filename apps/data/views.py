@@ -2,12 +2,13 @@ from django.shortcuts import render
 from django.http import HttpResponse
 
 import os
+import json
 
 from .functions import SignUserUpForReports, RequestAmzReportDataAllReports, UploadDataToGoogleSheetsAllReports
 
 from .functions import last_n_days
 
-from apps.amazon_api.models import AmzTokens
+from .models import ReportsMaintained
 
 LWA_CLIENT_ID = os.environ.get('LWA_CLIENT_ID')
 DOMAIN_URL = os.environ.get('DOMAIN_URL')
@@ -15,17 +16,17 @@ DOMAIN_URL = os.environ.get('DOMAIN_URL')
 def sign_up_for_reports(request):
     user = request.user.username
     SignUserUpForReports(request, user, [], 'gs_file_name').execute()
-    return HttpResponse(status=200)
+    return index(request)
 
 def populate_all_reports(request):
     dates = last_n_days(60)
     for date in dates:
         RequestAmzReportDataAllReports(request, date).execute()
-    return HttpResponse(status=200)
+    return index(request)
 
 def upload_all_reports_to_gs(request):
     UploadDataToGoogleSheetsAllReports(request).execute()
-    return HttpResponse(status=200)
+    return index(request)
 
 # parse request object for necessary info
 # make an accounts table
@@ -39,11 +40,14 @@ def handle_login(request):
 def index(request):
     if request.user.is_authenticated:
         user = request.user.username
-        try:
-            accounts = list(AmzTokens.objects.filter(USER=user).values())
-            accounts = [x['PROFILE_NAME'] for x in accounts]
-        except:
-            accounts = []
+        accounts = ReportsMaintained.objects.filter(USER=user).values_list('AMAZON_PROFILE_NAME', 'GOOGLE_SHEETS_ID').distinct()
+        accounts = list(accounts)
+        accounts = [{
+                        'AMAZON_PROFILE_NAME': x[0], 
+                        'GOOGLE_SHEETS_URL': 'https://docs.google.com/spreadsheets/d/' + x[1] + '/edit'
+                    } 
+                        for x in accounts]
+        accounts = [json.loads(json.dumps(x)) for x in accounts]
         return render(
                         request, 
                         'data/my_ads_accounts.html', 
