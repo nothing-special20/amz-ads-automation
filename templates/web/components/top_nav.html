@@ -50,12 +50,12 @@
             </li>
           </div>
         {% else %}
-        <li class="nav-item">
+        {% comment %} <li class="nav-item">
           <a class="nav-link" href="{% url 'account_signup' %}">Sign up</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="{% url 'account_login' %}">Sign in</a>
-        </li>
+        </li> {% endcomment %}
         {% endif %}
       </ul>
     </div>
