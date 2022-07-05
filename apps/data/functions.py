@@ -4,22 +4,19 @@ import pandas as pd
 import numpy as np
 import datetime
 import time
-from celery import Celery
 import re
 
 from .models import ReportsMaintained
 from apps.amazon_api.models import AmzTokens, AmzScheduledReports
 
 from apps.amazon_api.functions import amz_access_token, amz_profiles, download_and_convert_report, create_report_and_get_report_id, store_scheduled_reports, amz_profile_details
-from apps.google_api.functions import google_append_sheet, google_create_sheet, google_share_file, google_sheets_add_tab
+from apps.google_api.functions import google_append_sheet, google_create_sheet, google_share_file, google_sheets_add_tab, google_sheets_rm_tab
 
 from .static_values import product_ads_metrics, search_term_keyword_metrics, sponsored_brands_ads_metrics
 
 LWA_CLIENT_ID = os.environ.get("LWA_CLIENT_ID")
 LWA_CLIENT_SECRET = os.environ.get("LWA_CLIENT_SECRET")
 RETURN_URL = os.environ.get("RETURN_URL")
-
-# app = Celery('functions')
 
 def refresh_token(request):
 	user = request.user.username
@@ -93,7 +90,7 @@ class SignUserUpForReports:
 		for pair in self.tab_col_pairs():
 			google_sheets_add_tab(self.gs_id, pair['tab_name'], pair['columns'])
 		
-		# google_sheets_add_tab(self.gs_id, 'Sheet1', pair['columns'])
+		google_sheets_rm_tab(self.gs_id)
 
 	def google_share_file(self):
 		return google_share_file(self.gs_id, self.user)
@@ -110,9 +107,10 @@ class RequestAmzReportDataAllReports:
 		RequestAmazonProductAdsReportData(self.request, self.report_date, reports_maintained).execute()
 		RequestAmazonSearchTermKeywordReportData(self.request, self.report_date, reports_maintained).execute()
 		# Currently I don't have access to a seller account with this data
-		RequestAmazonSponsoredBrandAdsReportData(self.request, self.report_date, reports_maintained).execute()
+		# RequestAmazonSponsoredBrandAdsReportData(self.request, self.report_date, reports_maintained).execute()
 
 class UploadDataToGoogleSheetsAllReports:
+	# name = 'tasks.UploadDataToGoogleSheetsAllReports'
 	def __init__(self, request):
 		self.request = request
 		self.user = request.user.username
