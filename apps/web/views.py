@@ -7,6 +7,7 @@ from django.utils.translation import gettext_lazy as _
 from apps.teams.decorators import login_and_team_required
 from apps.teams.helpers import get_default_team_from_request
 
+from .functions import store_newsletter_signups
 
 def home(request):
     if request.user.is_authenticated:
@@ -20,7 +21,18 @@ def home(request):
             ))
             return HttpResponseRedirect(reverse('teams:manage_teams'))
     else:
+        store_email_for_newsletter(request)
         return render(request, 'web/landing_page.html')
+
+def store_email_for_newsletter(request):
+    if request.method == 'POST':
+        try:
+            name = request.POST.get('name')
+            email = request.POST.get('email')
+            company = request.POST.get('company')
+            store_newsletter_signups(name, email, company)
+        except Exception as e:
+            print('Error storing newsletter email:\t' + e)
 
 
 @login_and_team_required
