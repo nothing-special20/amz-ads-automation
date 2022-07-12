@@ -39,6 +39,12 @@
     {% if GOOGLE_ANALYTICS_ID %}
         {% include 'web/components/google_analytics.html' %}
     {% endif %}
+    {% if MICROSOFT_CLARITY %}
+        {% include 'web/components/microsoft_clarity.html' %}
+    {% endif %}
+    {% if CRISP_ID %}
+        {% include 'web/components/crisp.html' %}
+    {% endif %}
     {% block page_head %}
     {% endblock %}
 </head>
