@@ -10,6 +10,8 @@ from .functions import last_n_days
 
 from .models import ReportsMaintained
 
+import pandas as pd
+
 LWA_CLIENT_ID = os.environ.get('LWA_CLIENT_ID')
 DOMAIN_URL = os.environ.get('DOMAIN_URL')
 
@@ -58,3 +60,21 @@ def index(request):
 
     else:
         return render(request, 'subscriptions/subscription_gated_page.html')
+
+
+from .functions_dashboard import plotly_plot
+from django.conf import settings
+
+STATIC_ROOT = getattr(settings, "STATIC_ROOT", None)
+
+def dashboard(request):
+    df = pd.read_csv('static/sponsored_products_sample.csv')
+    target_plot = plotly_plot(df)
+    #Return context to home page view
+    context = {'target_plot': target_plot}
+        
+    # Render the HTML template index.html with the data in the context variable.
+    return render(
+        request,
+        'plotly/base.html',
+        context= context)

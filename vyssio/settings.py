@@ -62,6 +62,9 @@ THIRD_PARTY_APPS = [
     'hijack',  # "login as" functionality
     'hijack.contrib.admin',  # hijack buttons in the admin
     'djstripe',  # stripe integration
+    'django_plotly_dash.apps.DjangoPlotlyDashConfig',
+    'channels',
+    'channels_redis'
 ]
 
 PEGASUS_APPS = [
@@ -93,6 +96,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'hijack.middleware.HijackUserMiddleware',
+    'django_plotly_dash.middleware.BaseMiddleware',
 ]
 
 ROOT_URLCONF = 'vyssio.urls'
@@ -188,10 +192,8 @@ ACCOUNT_EMAIL_VERIFICATION = 'none'
 
 
 AUTHENTICATION_BACKENDS = (
-    # Needed to login by username in Django admin, regardless of `allauth`
     "django.contrib.auth.backends.ModelBackend",
-    # `allauth` specific authentication methods, such as login by e-mail
-    "allauth.account.auth_backends.AuthenticationBackend",
+    "allauth.account.auth_backends.AuthenticationBackend"
 )
 
 
@@ -343,3 +345,31 @@ if SENTRY_DSN:
         dsn=SENTRY_DSN,
         integrations=[DjangoIntegration()]
     )
+
+# Django Plotly Dash
+ASGI_APPLICATION = 'routing.application'
+
+# Add CHANNEL_LAYERS
+CHANNEL_LAYERS = {
+   'default': { 'BACKEND': 'channels_redis.core.RedisChannelLayer',
+                'CONFIG': {
+                           'hosts': [('redis', 6379),],
+                          }
+              }
+}
+
+#Add STATICFILES_FINDERS 
+STATICFILES_FINDERS = [
+    'django_plotly_dash.finders.DashAssetFinder',
+    'django_plotly_dash.finders.DashComponentFinder'
+]
+
+#Add PLOTLY_COMPONENTS
+PLOTLY_COMPONENTS = [
+    'dash_core_components',
+    'dash_html_components',
+    # 'dash_renderer',
+    'dpd_components']
+
+#Add X_FRAME_OPTIONS = 'SAMEORIGIN' to settings.py to enable frames within HTML documents
+X_FRAME_OPTIONS = 'SAMEORIGIN'
