@@ -20,6 +20,7 @@ class AmzScheduledReports(models.Model):
     DATE_SCHEDULED = models.DateTimeField()
 
 class AmzSponsoredProductsAds(models.Model):
+    REPORT_ID = models.TextField()
     CAMPAIGN_ID = models.TextField()
     CAMPAIGN_NAME = models.TextField()
     CAMPAIGN_STATUS = models.TextField()

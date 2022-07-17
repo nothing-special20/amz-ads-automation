@@ -62,6 +62,7 @@ def refresh_token(request):
 ### ORM Functions
 def upload_amz_sponsored_products_ads(data):
 	doc = AmzSponsoredProductsAds(
+		REPORT_ID = data['REPORT_ID'],
 		CAMPAIGN_ID = data['campaignId'],
 		CAMPAIGN_NAME = data['campaignName'],
 		CAMPAIGN_STATUS = data['campaignStatus'],
@@ -271,6 +272,7 @@ class UploadDataToGoogleSheets:
 			gs_id = record['GOOGLE_SHEET_ID']
 
 			report_values = download_and_convert_report(access_token, profile_id, report_id, report_date, re.sub('\\*','',self.metrics()).split(','))
+			report_values['report_id'] = report_id
 			self.upload_to_db(report_values)
 			# report_values = self.data_enrichment(report_values)
 
