@@ -19,30 +19,6 @@ LWA_CLIENT_SECRET = os.environ.get("LWA_CLIENT_SECRET")
 RETURN_URL = os.environ.get("RETURN_URL")
 
 ### Misc Functions
-
-def this_week():
-    today = datetime.datetime.today()
-    this_week = []
-    for i in range(7):
-        this_week.append((today - datetime.timedelta(days=i)).strftime('%Y-%m-%d'))
-    return this_week
-
-def previous_week():
-    today = datetime.datetime.today()
-    previous_week = []
-    for i in range(7, 14):
-        previous_week.append((today - datetime.timedelta(days=i)).strftime('%Y-%m-%d'))
-    return previous_week
-
-def week_bucketing(date):
-    date = date.strftime('%Y-%m-%d')
-    if date in this_week():
-        return 'this_week'
-    elif date in previous_week():
-        return 'previous_week'
-    else:
-        return 'other'
-
 def last_n_days(n):
 	last_n_days = [datetime.datetime.now() - datetime.timedelta(x) for x in range(n)]
 	last_n_days = [x.year * 10000 + x.month * 100 + x.day for x in last_n_days]
@@ -393,23 +369,3 @@ class UploadAmazonSearchTermKeywordReportDataToGoogleSheets(UploadDataToGoogleSh
 		return search_term_keyword_metrics()
 
 
-### Fetch Data
-
-def amz_sponsored_products_ads_data():
-    df = AmzSponsoredProductsAds.objects.all().values('DATE', 'IMPRESSIONS', 'CLICKS', 'ATTRIBUTED_SALES_30D', 'COST').distinct()
-    df = pd.DataFrame(list(df))
-    
-    df['ATTRIBUTED_SALES_30D'] = df['ATTRIBUTED_SALES_30D'].astype(float)
-    df['COST'] = df['COST'].astype(float)
-    df = df[df['IMPRESSIONS']>0].groupby(['DATE']).sum(['IMPRESSIONS', 'CLICKS', 'ATTRIBUTED_SALES_30D', 'COST']).reset_index()
-    df['COST_PER_CLICK'] = df['COST'] / df['CLICKS']
-
-    df['DATE'] = [datetime.datetime(year=int(str(x)[0:4]), month=int(str(x)[4:6]), day=int(str(x)[6:])) for x in list(df['DATE'])]
-    df['WEEK_BUCKET'] = df['DATE'].apply(week_bucketing)
-    df['DATE_'] = df['DATE']
-    last_week_bool = df['WEEK_BUCKET'] == 'previous_week'
-    df = df[[x!='other' for x in df['WEEK_BUCKET']]]
-
-    df['DATE_'][last_week_bool] = [(x + datetime.timedelta(days=7)).strftime('%Y-%m-%d') for x in df['DATE_'][last_week_bool]]
-
-    return df

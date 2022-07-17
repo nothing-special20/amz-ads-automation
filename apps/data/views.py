@@ -6,11 +6,8 @@ import json
 
 from .functions import SignUserUpForReports, RequestAmzReportDataAllReports, UploadDataToGoogleSheetsAllReports
 
-from .functions import last_n_days, amz_sponsored_products_ads_data
-
-from .functions_dashboard import plotly_plot
-
-from apps.amazon_api.models import AmzSponsoredProductsAds
+from .functions import last_n_days
+from .functions_dashboard import AmzSponsoredProductsAdsDashboard
 
 from .models import ReportsMaintained
 
@@ -66,12 +63,12 @@ def index(request):
         return render(request, 'subscriptions/subscription_gated_page.html')
 
 def dashboard(request):
-    df = amz_sponsored_products_ads_data()
+    amz_dashboard = AmzSponsoredProductsAdsDashboard().execute()
 
-    impressions_plot = plotly_plot(df, 'IMPRESSIONS', 'DATE_', 'IMPRESSIONS', 'WEEK_BUCKET')
-    clicks_plot = plotly_plot(df, 'CLICKS', 'DATE_', 'CLICKS', 'WEEK_BUCKET')
-    sales_plot = plotly_plot(df, 'SALES', 'DATE_', 'ATTRIBUTED_SALES_30D', 'WEEK_BUCKET')
-    cpc_plot = plotly_plot(df, 'COST_PER_CLICK', 'DATE_', 'COST_PER_CLICK', 'WEEK_BUCKET')
+    impressions_plot = amz_dashboard['impressions_plot']
+    clicks_plot = amz_dashboard['clicks_plot']
+    sales_plot = amz_dashboard['sales_plot']
+    cpc_plot = amz_dashboard['cpc_plot']
 
     #Return context to home page view
     context = {
