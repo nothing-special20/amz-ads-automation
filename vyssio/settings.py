@@ -358,11 +358,11 @@ CHANNEL_LAYERS = {
               }
 }
 
-#Add STATICFILES_FINDERS 
-STATICFILES_FINDERS = [
-    'django_plotly_dash.finders.DashAssetFinder',
-    'django_plotly_dash.finders.DashComponentFinder'
-]
+# #Add STATICFILES_FINDERS 
+# STATICFILES_FINDERS = [
+#     'django_plotly_dash.finders.DashAssetFinder',
+#     'django_plotly_dash.finders.DashComponentFinder'
+# ]
 
 #Add PLOTLY_COMPONENTS
 PLOTLY_COMPONENTS = [

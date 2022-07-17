@@ -1,13 +1,29 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plotly Test</title>
+    <title>Amazon Ads Dashboards</title>
+
+    <link rel="stylesheet" href="{% static 'css/site-bootstrap.css' %}">
 </head>
 <body>
-    {{target_plot|safe}}
-    
+    <div class="container">
+        <div class="row">
+          <div class="col-sm">
+            {{impressions_plot|safe}}
+          </div>
+          <div class="col-sm">
+            {{clicks_plot|safe}}
+          </div>
+        </div>
+        <div>
+            <div class="col-sm">
+                {{sales_plot|safe}}
+            </div>
+        </div
+      </div>
 </body>
 </html>

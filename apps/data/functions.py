@@ -7,7 +7,7 @@ import time
 import re
 
 from .models import ReportsMaintained
-from apps.amazon_api.models import AmzTokens, AmzScheduledReports
+from apps.amazon_api.models import AmzTokens, AmzScheduledReports, AmzSponsoredProductsAds
 
 from apps.amazon_api.functions import amz_access_token, amz_profiles, download_and_convert_report, create_report_and_get_report_id, store_scheduled_reports, amz_profile_details
 from apps.google_api.functions import google_append_sheet, google_create_sheet, google_share_file, google_sheets_add_tab, google_sheets_rm_tab
@@ -32,6 +32,51 @@ def last_n_days(n):
 	last_n_days = [datetime.datetime.now() - datetime.timedelta(x) for x in range(n)]
 	last_n_days = [x.year * 10000 + x.month * 100 + x.day for x in last_n_days]
 	return last_n_days
+
+### ORM Functions
+def upload_amz_sponsored_products_ads(data):
+	doc = AmzSponsoredProductsAds(
+		CAMPAIGN_ID = data['campaignId'],
+		CAMPAIGN_NAME = data['campaignName'],
+		CAMPAIGN_STATUS = data['campaignStatus'],
+		AD_GROUP_ID = data['adGroupId'],
+		AD_GROUP_NAME = data['adGroupName'],
+		ASIN = data['asin'],
+		SKU = data['sku'],
+		IMPRESSIONS = data['impressions'],
+		CLICKS = data['clicks'],
+		COST = data['cost'],
+		CAMPAIGN_BUDGET = data['campaignBudget'],
+		CAMPAIGN_BUDGET_TYPE = data['campaignBudgetType'],
+		CURRENCY = data['currency'],
+		ATTRIBUTED_SALES_1D	= data['attributedSales1d'],
+		ATTRIBUTED_SALES_7D	= data['attributedSales7d'],
+		ATTRIBUTED_SALES_14D = data['attributedSales14d'],
+		ATTRIBUTED_SALES_30D = data['attributedSales30d'],
+		ATTRIBUTED_SALES_1D_SAME_SKU = data['attributedSales1dSameSKU'],
+		ATTRIBUTED_SALES_7D_SAME_SKU = data['attributedSales7dSameSKU'],
+		ATTRIBUTED_SALES_14D_SAME_SKU = data['attributedSales14dSameSKU'],
+		ATTRIBUTED_SALES_30D_SAME_SKU = data['attributedSales30dSameSKU'],
+		ATTRIBUTED_UNITS_ORDERED_1D = data['attributedUnitsOrdered1d'],
+		ATTRIBUTED_UNITS_ORDERED_7D = data['attributedUnitsOrdered7d'],
+		ATTRIBUTED_UNITS_ORDERED_14D = data['attributedUnitsOrdered14d'],
+		ATTRIBUTED_UNITS_ORDERED_30D = data['attributedUnitsOrdered30d'],
+		ATTRIBUTED_UNITS_ORDERED_1D_SAME_SKU = data['attributedUnitsOrdered1dSameSKU'],
+		ATTRIBUTED_UNITS_ORDERED_7D_SAME_SKU = data['attributedUnitsOrdered7dSameSKU'],
+		ATTRIBUTED_UNITS_ORDERED_14D_SAME_SKU = data['attributedUnitsOrdered14dSameSKU'],
+		ATTRIBUTED_UNITS_ORDERED_30D_SAME_SKU = data['attributedUnitsOrdered30dSameSKU'],
+		ATTRIBUTED_CONVERSIONS_1D = data['attributedConversions1d'],
+		ATTRIBUTED_CONVERSIONS_7D = data['attributedConversions7d'],
+		ATTRIBUTED_CONVERSIONS_14D = data['attributedConversions14d'],
+		ATTRIBUTED_CONVERSIONS_30D = data['attributedConversions30d'],
+		ATTRIBUTED_CONVERSIONS_1D_SAME_SKU = data['attributedConversions1dSameSKU'],
+		ATTRIBUTED_CONVERSIONS_7D_SAME_SKU = data['attributedConversions7dSameSKU'],
+		ATTRIBUTED_CONVERSIONS_14D_SAME_SKU = data['attributedConversions14dSameSKU'],
+		ATTRIBUTED_CONVERSIONS_30D_SAME_SKU = data['attributedConversions30dSameSKU'],
+		DATE = data['date'],
+		DATE_UPLOADED = datetime.datetime.now()
+	)
+	doc.save()
 
 class SignUserUpForReports:
 	def __init__(self, request, user, metrics, gs_file_name):
@@ -68,7 +113,7 @@ class SignUserUpForReports:
 		output = [
 			{
 				'tab_name': 'Sponsored Products Ads',
-				'columns': [(product_ads_metrics() + ',date,sku_bucket').split(',')]
+				'columns': [(product_ads_metrics() + ',date').split(',')] #,sku_bucket
 			},
 			{
 				'tab_name': 'Sponsored Products Keywords',
@@ -76,7 +121,7 @@ class SignUserUpForReports:
 			},
 			{
 				'tab_name': 'Sponsored Brand Ads',
-				'columns': [(search_term_keyword_metrics() + ',date,sku_bucket').split(',')]
+				'columns': [(search_term_keyword_metrics() + ',date').split(',')] #,sku_bucket
 			}
 		]
 		return output
@@ -187,6 +232,9 @@ class UploadDataToGoogleSheets:
 	def data_enrichment(self, data):
 		return data.values.tolist()
 
+	def upload_to_db(self, data):
+		pass
+
 	def execute(self):
 		access_token = amz_access_token(self.refresh_token)
 		scheduled_reports = list(AmzScheduledReports.objects.filter(USER=self.user, REPORT_ENDPOINT=self.report_endpoint).values())
@@ -197,7 +245,8 @@ class UploadDataToGoogleSheets:
 			gs_id = record['GOOGLE_SHEET_ID']
 
 			report_values = download_and_convert_report(access_token, profile_id, report_id, report_date, re.sub('\\*','',self.metrics()).split(','))
-			report_values = self.data_enrichment(report_values)
+			self.upload_to_db(report_values)
+			# report_values = self.data_enrichment(report_values)
 
 			google_append_sheet(report_values, gs_id, self.tab_name)
 			time.sleep(1)
@@ -232,16 +281,24 @@ class UploadAmazonProductAdsReportDataToGoogleSheets(UploadDataToGoogleSheets):
 		return product_ads_metrics()
 
 	def data_enrichment(self, data):
-		enrich_data = {
-			'sku': 'QC-XJBZ-S8G2',
-			'sku_bucket': 'treat bags'
-		}
+		# enrich_data = {
+		# 	'sku': 'QC-XJBZ-S8G2',
+		# 	'sku_bucket': 'treat bags'
+		# }
 
-		enrich_data = pd.DataFrame([enrich_data])
+		# enrich_data = pd.DataFrame([enrich_data])
 
-		data = pd.merge(data, enrich_data)
+		# data = pd.merge(data, enrich_data)
 
 		return data.values.tolist()
+
+	def upload_to_db(self, data):
+		for index, row in data.iterrows():
+			try:
+				upload_amz_sponsored_products_ads(row)
+			except Exception as e:
+				print(e)
+				pass
 
 """
 	Amazon Product Ads Reports
@@ -306,3 +363,4 @@ class UploadAmazonSearchTermKeywordReportDataToGoogleSheets(UploadDataToGoogleSh
 	
 	def metrics(self):
 		return search_term_keyword_metrics()
+

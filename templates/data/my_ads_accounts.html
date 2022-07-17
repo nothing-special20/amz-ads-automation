@@ -14,7 +14,13 @@
   <div>
     {% for account in ACCOUNTS %}
       <li>
-        <a href={{ account.GOOGLE_SHEETS_URL }} target=”_blank”>{{ account.AMAZON_PROFILE_NAME }}</a>
+        <div>
+          <p>{{account.AMAZON_PROFILE_NAME}}<p>
+          <ul>
+            <li><a href={{ account.GOOGLE_SHEETS_URL }} target=”_blank”>Google Sheets</a></li>
+            <li><a href={% url 'data:dashboard' %} target=”_blank”>Dashboard</a></li>
+          </ul>
+        </div>
       </li>
     {% endfor %}
   </div>
