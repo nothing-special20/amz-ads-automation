@@ -77,6 +77,7 @@ def dashboard(request):
     sales_plot = amz_dashboard['sales_plot']
     cpc_plot = amz_dashboard['cpc_plot']
     indicators = amz_dashboard['indicators']
+    keywords_tbl = amz_dashboard['keywords_tbl']
 
     #Return context to home page view
     context = {
@@ -84,7 +85,8 @@ def dashboard(request):
                 'clicks_plot': clicks_plot,
                 'sales_plot': sales_plot,
                 'cpc_plot': cpc_plot,
-                'indicators': indicators
+                'indicators': indicators,
+                'keywords_tbl': keywords_tbl,
                 }
         
     # Render the HTML template index.html with the data in the context variable.

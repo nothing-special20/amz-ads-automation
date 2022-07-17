@@ -5,7 +5,7 @@ from plotly.offline import plot
 import plotly.express as px
 import plotly.graph_objects as go
 
-from apps.amazon_api.models import AmzSponsoredProductsAds
+from apps.amazon_api.models import AmzSponsoredProductsAds, AmzSponsoredProductsKeywords
 
 #Inspiration - https://datastudio.google.com/u/0/reporting/0B_U5RNpwhcE6QXg4SXFBVGUwMjg/preview/
 
@@ -52,25 +52,49 @@ def amz_sponsored_products_ads_data(interval_in_days=7):
 
 	return df
 
+def amz_sponsored_products_keywords_data(interval_in_days=7):
+	metrics = ['IMPRESSIONS', 'CLICKS', 'ATTRIBUTED_SALES_30D', 'ATTRIBUTED_UNITS_ORDERED_30D', 'COST']
+	dimensions = ['KEYWORD_TEXT', 'QUERY', 'DATE']
+	df = AmzSponsoredProductsKeywords.objects.all().values(*dimensions, *metrics).distinct()
+	df = pd.DataFrame(list(df))
+
+	df['ATTRIBUTED_SALES_30D'] = df['ATTRIBUTED_SALES_30D'].astype(float)
+	df['COST'] = df['COST'].astype(float)
+	df = df[df['IMPRESSIONS']>0].groupby(dimensions).sum(metrics).reset_index()
+	df['COST_PER_CLICK'] = df['COST'] / df['CLICKS']
+
+	df = date_logic(df, interval_in_days)
+	df[df['WEEK_BUCKET'] == 'last_' + str(interval_in_days) + '_days']
+
+	df['ROAS'] = df['ATTRIBUTED_SALES_30D'] / df['COST']
+
+	del df['WEEK_BUCKET']
+	del df['DATE_']
+
+	return df
+
 class AmzSponsoredProductsAdsDashboard:
 	def __init__(self, interval_in_days):
 		self.interval_in_days = interval_in_days
-		self.df = amz_sponsored_products_ads_data(self.interval_in_days)
+		self.amz_sponsored_products_ads_df = amz_sponsored_products_ads_data(self.interval_in_days)
+		self.amz_sponsored_products_keywords_df = amz_sponsored_products_keywords_data(self.interval_in_days)
 
 	def execute(self):
-		impressions_plot = self.time_range_comparison_plot(self.df, 'IMPRESSIONS', 'DATE_', 'IMPRESSIONS', 'WEEK_BUCKET')
-		clicks_plot = self.time_range_comparison_plot(self.df, 'CLICKS', 'DATE_', 'CLICKS', 'WEEK_BUCKET')
-		sales_plot = self.time_range_comparison_plot(self.df, 'SALES', 'DATE_', 'ATTRIBUTED_SALES_30D', 'WEEK_BUCKET')
-		cpc_plot = self.time_range_comparison_plot(self.df, 'COST_PER_CLICK', 'DATE_', 'COST_PER_CLICK', 'WEEK_BUCKET')
+		impressions_plot = self.time_range_comparison_plot(self.amz_sponsored_products_ads_df, 'IMPRESSIONS', 'DATE_', 'IMPRESSIONS', 'WEEK_BUCKET')
+		clicks_plot = self.time_range_comparison_plot(self.amz_sponsored_products_ads_df, 'CLICKS', 'DATE_', 'CLICKS', 'WEEK_BUCKET')
+		sales_plot = self.time_range_comparison_plot(self.amz_sponsored_products_ads_df, 'SALES', 'DATE_', 'ATTRIBUTED_SALES_30D', 'WEEK_BUCKET')
+		cpc_plot = self.time_range_comparison_plot(self.amz_sponsored_products_ads_df, 'COST_PER_CLICK', 'DATE_', 'COST_PER_CLICK', 'WEEK_BUCKET')
 
 		indicators = self.plotly_indicators()
+		keywords_tbl = self.plotly_keyword_tbl(self.amz_sponsored_products_keywords_df)
 
 		return {
 			'impressions_plot': impressions_plot,
 			'clicks_plot': clicks_plot,
 			'sales_plot': sales_plot,
 			'cpc_plot': cpc_plot,
-			'indicators': indicators
+			'indicators': indicators,
+			'keywords_tbl': keywords_tbl
 		}
 
 	def time_range_comparison_plot(self, df, plot_name, x_axis, y_axis, color):
@@ -104,8 +128,8 @@ class AmzSponsoredProductsAdsDashboard:
 
 
 	def indicator_values(self):
-		last_n_days = self.df[self.df['WEEK_BUCKET'] == 'last_' + str(self.interval_in_days) + '_days']
-		previous_n_days = self.df[self.df['WEEK_BUCKET'] == 'previous_' + str(self.interval_in_days) + '_days']
+		last_n_days = self.amz_sponsored_products_ads_df[self.amz_sponsored_products_ads_df['WEEK_BUCKET'] == 'last_' + str(self.interval_in_days) + '_days']
+		previous_n_days = self.amz_sponsored_products_ads_df[self.amz_sponsored_products_ads_df['WEEK_BUCKET'] == 'previous_' + str(self.interval_in_days) + '_days']
 		return {
 			'last_n_impressions': last_n_days['IMPRESSIONS'].sum(),
 			'previous_n_impressions': previous_n_days['IMPRESSIONS'].sum(),
@@ -118,18 +142,6 @@ class AmzSponsoredProductsAdsDashboard:
 	def plotly_indicators(self):
 		fig = go.Figure()
 		data = self.indicator_values()
-
-		# fig.add_trace(go.Indicator(
-		# 	mode = "number+delta",
-		# 	value = 200,
-		# 	domain = {'x': [0, 0.5], 'y': [0, 0.5]},
-		# 	delta = {'reference': 400, 'relative': True, 'position' : "top"}))
-
-		# fig.add_trace(go.Indicator(
-		# 	mode = "number+delta",
-		# 	value = 350,
-		# 	delta = {'reference': 400, 'relative': True},
-		# 	domain = {'x': [0, 0.5], 'y': [0.5, 1]}))
 
 		fig.add_trace(go.Indicator(
 			mode = "number+delta",
@@ -159,6 +171,20 @@ class AmzSponsoredProductsAdsDashboard:
 			paper_bgcolor="#ffffff"
 			)
 
+		indicators_plot_obj = plot({'data': fig}, output_type='div')
+
+		return indicators_plot_obj
+
+	def plotly_keyword_tbl(self, df):
+		list_of_df_vals = [df[x] for x in df.columns.values]
+		fig = go.Figure(data=[go.Table(
+		header=dict(values=list(df.columns),
+					fill_color='paleturquoise',
+					align='left'),
+		cells=dict(values=list_of_df_vals,
+				fill_color='lavender',
+				align='left'))
+		])
 
 		indicators_plot_obj = plot({'data': fig}, output_type='div')
 
