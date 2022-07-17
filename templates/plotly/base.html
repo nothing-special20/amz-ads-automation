@@ -12,18 +12,19 @@
 <body>
     <div class="container">
         <div class="row">
-          <div class="col-sm">
+          <div class="col-sm-3">
             {{impressions_plot|safe}}
           </div>
-          <div class="col-sm">
+          <div class="col-sm-3">
             {{clicks_plot|safe}}
           </div>
+          <div class="col-sm-3">
+            {{sales_plot|safe}}
+          </div>
+          <div class="col-sm-3">
+            {{cpc_plot|safe}}
+          </div>
         </div>
-        <div>
-            <div class="col-sm">
-                {{sales_plot|safe}}
-            </div>
-        </div
-      </div>
+    </div>
 </body>
 </html>

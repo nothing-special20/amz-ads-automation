@@ -6,7 +6,7 @@ import json
 
 from .functions import SignUserUpForReports, RequestAmzReportDataAllReports, UploadDataToGoogleSheetsAllReports
 
-from .functions import last_n_days
+from .functions import last_n_days, amz_sponsored_products_ads_data
 
 from apps.amazon_api.models import AmzSponsoredProductsAds
 
@@ -87,44 +87,20 @@ def group_dates_by_week(date_list):
     weeks.append(week)
     return weeks
 
-def this_week():
-    today = datetime.datetime.today()
-    this_week = []
-    for i in range(7):
-        this_week.append((today - datetime.timedelta(days=i)).strftime('%Y-%m-%d'))
-    return this_week
-
-def previous_week():
-    today = datetime.datetime.today()
-    previous_week = []
-    for i in range(7, 14):
-        previous_week.append((today - datetime.timedelta(days=i)).strftime('%Y-%m-%d'))
-    return previous_week
-
-def week_bucketing(date):
-    if date in this_week():
-        return 'this_week'
-    elif date in previous_week():
-        return 'previous_week'
-    else:
-        return 'other'
-
 def dashboard(request):
-    df = AmzSponsoredProductsAds.objects.all().values('DATE', 'IMPRESSIONS', 'CLICKS', 'ATTRIBUTED_SALES_30D').distinct()
-    df = pd.DataFrame(list(df))
-    
-    df['ATTRIBUTED_SALES_30D'] = df['ATTRIBUTED_SALES_30D'].astype(float)
-    df = df[df['IMPRESSIONS']>0].groupby(['DATE']).sum(['IMPRESSIONS', 'CLICKS', 'ATTRIBUTED_SALES_30D']).reset_index()
-    df['DATE'] = [datetime.datetime(year=int(str(x)[0:4]), month=int(str(x)[4:6]), day=int(str(x)[6:])) for x in list(df['DATE'])]
-    df['week_bucket'] = df['DATE'].apply(week_bucketing)
-    impressions_plot = plotly_plot(df, 'IMPRESSIONS', 'DATE', 'IMPRESSIONS')
-    clicks_plot = plotly_plot(df, 'CLICKS', 'DATE', 'CLICKS')
-    sales_plot = plotly_plot(df, 'SALES', 'DATE', 'ATTRIBUTED_SALES_30D')
+    df = amz_sponsored_products_ads_data()
+
+    impressions_plot = plotly_plot(df, 'IMPRESSIONS', 'DATE_', 'IMPRESSIONS', 'WEEK_BUCKET')
+    clicks_plot = plotly_plot(df, 'CLICKS', 'DATE_', 'CLICKS', 'WEEK_BUCKET')
+    sales_plot = plotly_plot(df, 'SALES', 'DATE_', 'ATTRIBUTED_SALES_30D', 'WEEK_BUCKET')
+    cpc_plot = plotly_plot(df, 'COST_PER_CLICK', 'DATE_', 'COST_PER_CLICK', 'WEEK_BUCKET')
+
     #Return context to home page view
     context = {
                 'impressions_plot': impressions_plot,
                 'clicks_plot': clicks_plot,
                 'sales_plot': sales_plot,
+                'cpc_plot': cpc_plot,
                 }
         
     # Render the HTML template index.html with the data in the context variable.
