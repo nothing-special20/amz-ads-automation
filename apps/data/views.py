@@ -63,12 +63,20 @@ def index(request):
         return render(request, 'subscriptions/subscription_gated_page.html')
 
 def dashboard(request):
-    amz_dashboard = AmzSponsoredProductsAdsDashboard().execute()
+    interval_in_days = 7
+    if request.method == 'POST':
+        try:
+            interval_in_days = int(request.POST.get('interval_in_days'))
+        except Exception as e:
+            pass
+
+    amz_dashboard = AmzSponsoredProductsAdsDashboard(interval_in_days).execute()
 
     impressions_plot = amz_dashboard['impressions_plot']
     clicks_plot = amz_dashboard['clicks_plot']
     sales_plot = amz_dashboard['sales_plot']
     cpc_plot = amz_dashboard['cpc_plot']
+    indicators = amz_dashboard['indicators']
 
     #Return context to home page view
     context = {
@@ -76,6 +84,7 @@ def dashboard(request):
                 'clicks_plot': clicks_plot,
                 'sales_plot': sales_plot,
                 'cpc_plot': cpc_plot,
+                'indicators': indicators
                 }
         
     # Render the HTML template index.html with the data in the context variable.
