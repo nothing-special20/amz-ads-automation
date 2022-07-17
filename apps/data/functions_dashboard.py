@@ -54,7 +54,7 @@ def amz_sponsored_products_ads_data(interval_in_days=7):
 
 def amz_sponsored_products_keywords_data(interval_in_days=7):
 	metrics = ['IMPRESSIONS', 'CLICKS', 'ATTRIBUTED_SALES_30D', 'ATTRIBUTED_UNITS_ORDERED_30D', 'COST']
-	dimensions = ['KEYWORD_TEXT', 'QUERY', 'DATE']
+	dimensions = ['QUERY', 'DATE'] #'KEYWORD_TEXT',
 	df = AmzSponsoredProductsKeywords.objects.all().values(*dimensions, *metrics).distinct()
 	df = pd.DataFrame(list(df))
 
@@ -67,6 +67,8 @@ def amz_sponsored_products_keywords_data(interval_in_days=7):
 	df[df['WEEK_BUCKET'] == 'last_' + str(interval_in_days) + '_days']
 
 	df['ROAS'] = df['ATTRIBUTED_SALES_30D'] / df['COST']
+
+	df.sort_values(by=['ROAS'], inplace=True, ascending=False)
 
 	del df['WEEK_BUCKET']
 	del df['DATE_']
@@ -179,10 +181,10 @@ class AmzSponsoredProductsAdsDashboard:
 		list_of_df_vals = [df[x] for x in df.columns.values]
 		fig = go.Figure(data=[go.Table(
 		header=dict(values=list(df.columns),
-					fill_color='paleturquoise',
+					fill_color='lightblue',
 					align='left'),
 		cells=dict(values=list_of_df_vals,
-				fill_color='lavender',
+				fill_color='white',
 				align='left'))
 		])
 
