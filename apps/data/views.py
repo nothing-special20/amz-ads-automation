@@ -8,6 +8,8 @@ from .functions import SignUserUpForReports, RequestAmzReportDataAllReports, Upl
 
 from .functions import last_n_days, amz_sponsored_products_ads_data
 
+from .functions_dashboard import plotly_plot
+
 from apps.amazon_api.models import AmzSponsoredProductsAds
 
 from .models import ReportsMaintained
@@ -62,30 +64,6 @@ def index(request):
 
     else:
         return render(request, 'subscriptions/subscription_gated_page.html')
-
-
-from .functions_dashboard import plotly_plot
-from django.conf import settings
-
-import datetime
-
-
-def group_dates_by_week(date_list):
-    date_list = [datetime.datetime.strptime(x, '%Y-%m-%d') for x in date_list]
-    date_list.sort()
-    date_list = [x.strftime('%Y-%m-%d') for x in date_list]
-    weeks = []
-    week = []
-    for date in date_list:
-        if len(week) == 0:
-            week.append(date)
-        elif (datetime.datetime.strptime(date, '%Y-%m-%d') - datetime.datetime.strptime(week[-1], '%Y-%m-%d')).days == 7:
-            week.append(date)
-        else:
-            weeks.append(week)
-            week = [date]
-    weeks.append(week)
-    return weeks
 
 def dashboard(request):
     df = amz_sponsored_products_ads_data()
