@@ -1,6 +1,5 @@
 import re
 from plotly.offline import plot
-import plotly.graph_objs as go
 import plotly.express as px
 
 def plotly_plot(df, plot_name, x_axis, y_axis, color):
