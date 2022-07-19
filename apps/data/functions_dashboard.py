@@ -195,29 +195,59 @@ class AmzSponsoredProductsAdsDashboard:
 		fig.add_trace(go.Indicator(
 			mode = "number+delta",
 			value = data['last_n_impressions'],
-			title = {"text": "Impressions<br><span style='font-size:0.8em;color:gray'></span><br>"},
-			delta = {'reference': data['previous_n_impressions'], 'relative': True},
-			domain = {'x': [0, 0.33], 'y': [0, 1]}))
+			title = {
+						"text": "Impressions",
+						'font': {'size': 20}
+						 },
+			delta = {
+						'reference': data['previous_n_impressions'],
+						'relative': True, 
+						'valueformat': ',.0%',
+						'font': {'size': 15}
+					},
+			domain = {'x': [0, 0.33], 'y': [0, 1]},
+			number = {"font":{"size":20}}
+			))
 
 		fig.add_trace(go.Indicator(
 			mode = "number+delta",
 			value = data['last_n_clicks'],
-			title = {"text": "Clicks<br><span style='font-size:0.8em;color:gray'></span><br>"},
-			delta = {'reference': data['previous_n_clicks'], 'relative': True},
-			domain = {'x': [0.34, .67], 'y': [0, 1]}))
+			title = {
+						"text": "Clicks",
+						'font': {'size': 20}
+						 },
+			delta = {
+						'reference': data['previous_n_clicks'],
+						'relative': True, 
+						'valueformat': ',.0%',
+						'font': {'size': 15}
+					},
+			domain = {'x': [0.34, .67], 'y': [0, 1]},
+			number = {"font":{"size":20}}
+			))
 
 		fig.add_trace(go.Indicator(
 			mode = "number+delta",
 			value = data['last_n_sales'],
-			title = {"text": "Sales<br><span style='font-size:0.8em;color:gray'></span><br>"},
-			delta = {'reference': data['previous_n_sales'], 'relative': True},
-			domain = {'x': [0.68, 1], 'y': [0, 1]}))
+			title = {
+						"text": "Sales",
+						'font': {'size': 20}
+						 },
+			delta = {
+						'reference': data['previous_n_sales'],
+						'relative': True,
+						'valueformat': ',.0%',
+						'font': {'size': 15}
+					},
+			domain = {'x': [0.68, 1], 'y': [0, 1]},
+			number = {"font":{"size":20}}
+			))
 
 		fig.update_layout(
 			title_text='Last ' + str(self.interval_in_days) + ' Days',
 			title_x=0.5,
 			autosize=False,
-			width=480,
+			width=570,
 			height=210,
 			paper_bgcolor='rgba(0,0,0,0)',
     		plot_bgcolor='rgba(0,0,0,0)',
