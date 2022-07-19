@@ -5,7 +5,7 @@
 <section class="app-card">
   <h3 class="pg-subtitle">My Amazon Ads Dashboard</h3>
   <div class="container">
-    <div class="row">
+    <div class="row align-items-center">
       <div class="col-sm-3">
         <form method="post" enctype="multipart/form-data" action="">
           {% csrf_token %}
@@ -29,7 +29,7 @@
         </div>
         </form>
       </div>
-      <div class="col-sm-3">
+      <div class="col-sm-6">
         {{indicators|safe}}
       </div>
     </div>  
