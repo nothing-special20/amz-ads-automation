@@ -114,7 +114,7 @@ class AmzSponsoredProductsAdsDashboard:
 		impressions_plot = self.time_range_comparison_plot(self.amz_sponsored_products_ads_df, 'IMPRESSIONS', 'DATE_', 'IMPRESSIONS', 'WEEK_BUCKET')
 		clicks_plot = self.time_range_comparison_plot(self.amz_sponsored_products_ads_df, 'CLICKS', 'DATE_', 'CLICKS', 'WEEK_BUCKET')
 		sales_plot = self.time_range_comparison_plot(self.amz_sponsored_products_ads_df, 'SALES', 'DATE_', 'ATTRIBUTED_SALES_30D', 'WEEK_BUCKET')
-		units_ordered_plot = self.time_range_comparison_plot(self.amz_sponsored_products_ads_df, 'SALES', 'DATE_', 'ATTRIBUTED_UNITS_ORDERED_30D', 'WEEK_BUCKET')
+		units_ordered_plot = self.time_range_comparison_plot(self.amz_sponsored_products_ads_df, 'UNITS_ORDERED', 'DATE_', 'ATTRIBUTED_UNITS_ORDERED_30D', 'WEEK_BUCKET')
 		cpc_plot = self.time_range_comparison_plot(self.amz_sponsored_products_ads_df, 'COST_PER_CLICK', 'DATE_', 'COST_PER_CLICK', 'WEEK_BUCKET')
 		click_through_rates = self.time_range_comparison_plot(self.amz_sponsored_products_ads_df, 'CLICK_THROUGH_RATE', 'DATE_', 'CLICK_THROUGH_RATE', 'WEEK_BUCKET')
 		conversion_rates = self.time_range_comparison_plot(self.amz_sponsored_products_ads_df, 'CONVERSION_RATE', 'DATE_', 'CONVERSION_RATE', 'WEEK_BUCKET')
