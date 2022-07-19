@@ -71,29 +71,11 @@ def dashboard(request):
             pass
 
     amz_dashboard = AmzSponsoredProductsAdsDashboard(request, interval_in_days).execute()
-
-    impressions_plot = amz_dashboard['impressions_plot']
-    clicks_plot = amz_dashboard['clicks_plot']
-    sales_plot = amz_dashboard['sales_plot']
-    cpc_plot = amz_dashboard['cpc_plot']
-    indicators = amz_dashboard['indicators']
-    keywords_tbl = amz_dashboard['keywords_tbl']
-    units_ordered_plot = amz_dashboard['units_ordered_plot']
-
-    #Return context to home page view
-    context = {
-                'impressions_plot': impressions_plot,
-                'clicks_plot': clicks_plot,
-                'sales_plot': sales_plot,
-                'cpc_plot': cpc_plot,
-                'indicators': indicators,
-                'keywords_tbl': keywords_tbl,
-                'units_ordered_plot': units_ordered_plot
-                }
     
     context = amz_dashboard
+    # context = {}
     # Render the HTML template index.html with the data in the context variable.
     return render(
         request,
-        'plotly/base.html',
-        context= context)
+        'data/plotly/base.html',
+        context = context)

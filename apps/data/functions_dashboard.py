@@ -91,7 +91,7 @@ def amz_sponsored_products_keywords_data(user, interval_in_days=7):
 
 	df.sort_values(by=['ROAS'], inplace=True, ascending=False)
 
-	for col in ['ATTRIBUTED_SALES_30D', 'COST', 'ROAS']:
+	for col in ['ATTRIBUTED_SALES_30D', 'COST', 'ROAS', 'COST_PER_CLICK']:
 		df[col] = df[col].apply(lambda x: round(x, 2))
 
 	del df['WEEK_BUCKET']
@@ -144,8 +144,8 @@ class AmzSponsoredProductsAdsDashboard:
 							xaxis_title = x_axis,
 							yaxis_title = y_axis,
 							autosize=False,
-							width=400,
-							height=300,
+							width=360,
+							height=270,
 							paper_bgcolor='rgba(0,0,0,0)',
     						plot_bgcolor='rgba(0,0,0,0)',
 							margin = dict(
@@ -213,7 +213,8 @@ class AmzSponsoredProductsAdsDashboard:
 			autosize=False,
 			width=480,
 			height=210,
-			paper_bgcolor="#ffffff"
+			paper_bgcolor='rgba(0,0,0,0)',
+    		plot_bgcolor='rgba(0,0,0,0)',
 			)
 
 		indicators_plot_obj = plot({'data': fig}, output_type='div')
@@ -224,13 +225,21 @@ class AmzSponsoredProductsAdsDashboard:
 		list_of_df_vals = [df[x] for x in df.columns.values]
 		fig = go.Figure(data=[go.Table(
 		header=dict(values=list(df.columns),
-					fill_color='lightblue',
+					font=dict(color='white', size=12),
+					fill_color='#0d6efd',
 					align='left'),
 		cells=dict(values=list_of_df_vals,
 				fill_color='white',
+				line_color='darkslategray',
 				align='left'))
 		])
 
-		indicators_plot_obj = plot({'data': fig}, output_type='div')
+		fig.update_layout(
+			paper_bgcolor='rgba(0,0,0,0)',
+    		plot_bgcolor='rgba(0,0,0,0)',
+			# width=1080,
+			)
 
-		return indicators_plot_obj
+		plot_obj = plot({'data': fig}, output_type='div')
+
+		return plot_obj
