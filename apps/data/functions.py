@@ -38,7 +38,7 @@ def refresh_token(request):
 ### ORM Functions
 def upload_amz_sponsored_products_ads(data):
 	doc = AmzSponsoredProductsAds(
-		REPORT_ID = data['reportId'],
+		REPORT_ID = AmzScheduledReports.objects.get(REPORT_ID=data['reportId']),
 		CAMPAIGN_ID = data['campaignId'],
 		CAMPAIGN_NAME = data['campaignName'],
 		CAMPAIGN_STATUS = data['campaignStatus'],
@@ -83,7 +83,7 @@ def upload_amz_sponsored_products_ads(data):
 
 def upload_amz_sponsored_products_keywords(data):
 	doc = AmzSponsoredProductsKeywords(
-			REPORT_ID = data['reportId'],
+			REPORT_ID = AmzScheduledReports.objects.get(REPORT_ID=data['reportId']),
 			AD_GROUP_ID = data['adGroupId'],
 			AD_GROUP_NAME = data['adGroupName'],
 			CURRENCY = data['currency'],
