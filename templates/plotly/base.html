@@ -42,18 +42,25 @@
     </div>
     <div class="container">
         <div class="row">
-          <div class="col-sm-3">
+          <div class="col-sm-4">
             {{impressions_plot|safe}}
           </div>
-          <div class="col-sm-3">
+          <div class="col-sm-4">
             {{clicks_plot|safe}}
           </div>
-          <div class="col-sm-3">
-            {{sales_plot|safe}}
+          <div class="col-sm-4">
+            {{units_ordered_plot|safe}}
           </div>
-          <div class="col-sm-3">
-            {{cpc_plot|safe}}
+        </div>
+        <div class="row">
+          <div class="col-sm-4">
+            {{click_through_rates|safe}}
           </div>
+          <div class="col-sm-4">
+            {{conversion_rates|safe}}
+          </div>
+          <div class="col-sm-4">
+            {{acos_plot|safe}}
         </div>
     </div>
     <div class="container">

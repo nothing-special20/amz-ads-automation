@@ -14,13 +14,13 @@ class AmzScheduledReports(models.Model):
     USER = models.TextField()
     PROFILE_ID = models.TextField()
     REPORT_ENDPOINT = models.TextField(default='_')
-    REPORT_ID = models.TextField()
+    REPORT_ID = models.TextField(unique=True)
     REPORT_DATE = models.IntegerField()
     GOOGLE_SHEET_ID = models.TextField()
     DATE_SCHEDULED = models.DateTimeField()
 
 class AmzSponsoredProductsAds(models.Model):
-    REPORT_ID = models.TextField()
+    REPORT_ID = models.ForeignKey(AmzScheduledReports, to_field='REPORT_ID', on_delete=models.CASCADE)
     CAMPAIGN_ID = models.TextField()
     CAMPAIGN_NAME = models.TextField()
     CAMPAIGN_STATUS = models.TextField()
@@ -63,7 +63,7 @@ class AmzSponsoredProductsAds(models.Model):
 
 
 class AmzSponsoredProductsKeywords(models.Model):
-    REPORT_ID = models.TextField()
+    REPORT_ID = models.ForeignKey(AmzScheduledReports, to_field='REPORT_ID', on_delete=models.CASCADE)
     AD_GROUP_ID = models.TextField()
     AD_GROUP_NAME = models.TextField()
     CURRENCY = models.TextField()

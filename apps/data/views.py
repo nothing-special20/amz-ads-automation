@@ -70,7 +70,7 @@ def dashboard(request):
         except Exception as e:
             pass
 
-    amz_dashboard = AmzSponsoredProductsAdsDashboard(interval_in_days).execute()
+    amz_dashboard = AmzSponsoredProductsAdsDashboard(request, interval_in_days).execute()
 
     impressions_plot = amz_dashboard['impressions_plot']
     clicks_plot = amz_dashboard['clicks_plot']
@@ -78,6 +78,7 @@ def dashboard(request):
     cpc_plot = amz_dashboard['cpc_plot']
     indicators = amz_dashboard['indicators']
     keywords_tbl = amz_dashboard['keywords_tbl']
+    units_ordered_plot = amz_dashboard['units_ordered_plot']
 
     #Return context to home page view
     context = {
@@ -87,8 +88,10 @@ def dashboard(request):
                 'cpc_plot': cpc_plot,
                 'indicators': indicators,
                 'keywords_tbl': keywords_tbl,
+                'units_ordered_plot': units_ordered_plot
                 }
-        
+    
+    context = amz_dashboard
     # Render the HTML template index.html with the data in the context variable.
     return render(
         request,
