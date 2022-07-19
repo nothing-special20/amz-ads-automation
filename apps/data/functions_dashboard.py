@@ -1,6 +1,8 @@
+from operator import imod
 import re
 import datetime
 import pandas as pd
+import numpy as np
 from plotly.offline import plot
 import plotly.express as px
 import plotly.graph_objects as go
@@ -58,6 +60,8 @@ def amz_sponsored_products_ads_data(user, interval_in_days=7):
 	df['CLICK_THROUGH_RATE'] = df['CLICKS'] / df['IMPRESSIONS']
 	df['CONVERSION_RATE'] = df['ATTRIBUTED_UNITS_ORDERED_30D'] / df['CLICKS']
 	df['AVG_COST_OF_SALE'] = df['COST'] / df['ATTRIBUTED_SALES_30D']
+	#placeholder value for days with no sales
+	df['AVG_COST_OF_SALE'][df['AVG_COST_OF_SALE']==np.inf] = 10
 	df['COST_PER_CLICK'] = df['COST'] / df['CLICKS']
 
 	df = date_logic(df, interval_in_days)
