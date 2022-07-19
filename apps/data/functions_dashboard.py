@@ -30,7 +30,7 @@ def time_range_bucketing(date, interval_in_days):
 
 def date_logic(df, interval_in_days):
 	df['DATE'] = [int(x) for x in df['DATE']]
-	df['DATE'] = [datetime.datetime(year=int(str(x)[0:4]), month=int(str(x)[4:6]), day=int(str(x)[6:])) for x in list(df['DATE'])]
+	df['DATE'] = [datetime.datetime(year=int(str(x)[0:4]), month=int(str(x)[4:6]), day=int(str(x)[6:])).date() for x in list(df['DATE'])]
 	df['WEEK_BUCKET'] = df['DATE'].apply(lambda x: time_range_bucketing(x, interval_in_days))
 	df['DATE_'] = df['DATE']
 	last_time_range_bool = df['WEEK_BUCKET'] == 'previous_' + str(interval_in_days) + '_days'
@@ -241,7 +241,7 @@ class AmzSponsoredProductsAdsDashboard:
 		fig.update_layout(
 			paper_bgcolor='rgba(0,0,0,0)',
     		plot_bgcolor='rgba(0,0,0,0)',
-			# width=1080,
+			width=1120,
 			)
 
 		plot_obj = plot({'data': fig}, output_type='div')
