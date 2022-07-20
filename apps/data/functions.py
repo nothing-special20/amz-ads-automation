@@ -294,9 +294,9 @@ class UploadDataToGoogleSheets:
 			gs_id = record['GOOGLE_SHEET_ID']
 
 			report_values = download_and_convert_report(access_token, profile_id, report_id, report_date, re.sub('\\*','',self.metrics()).split(','))
-			google_append_sheet(report_values, gs_id, self.tab_name)
 			report_values['reportId'] = report_id
 			self.upload_to_db(report_values)
+			google_append_sheet(report_values.values.tolist(), gs_id, self.tab_name)
 			time.sleep(1)
 
 """
