@@ -39,7 +39,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.dev
-    command: celery -A vyssio worker -l INFO
+    # command: celery -A vyssio worker -l INFO
+    command: ["sh","-c","pip install debugpy -t /tmp && python /tmp/debugpy --listen 0.0.0.0:6900 -m celery -A vyssio worker -l info",]
+    ports:
+      - 6900:6900
     volumes:
       - .:/code
     env_file:
