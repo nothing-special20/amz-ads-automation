@@ -23,7 +23,7 @@ def sign_up_for_reports(request):
 
 def populate_all_reports(request):
     user = request.user.username
-    dates = last_n_days(2)
+    dates = last_n_days(60)
     for date in dates:
         request_amz_report_data_all_reports.delay(user, date)
     return index(request)
