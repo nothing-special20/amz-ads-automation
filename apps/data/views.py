@@ -4,10 +4,10 @@ from django.http import HttpResponse
 import os
 import json
 
-from .functions import SignUserUpForReports, RequestAmzReportDataAllReports, UploadDataToGoogleSheetsAllReports
-
 from .functions import last_n_days
 from .functions_dashboard import AmzSponsoredProductsAdsDashboard
+
+from .tasks import sign_up_user_for_reports_task, upload_all_reports_to_gs_task, request_amz_report_data_all_reports
 
 from .models import ReportsMaintained
 
@@ -18,17 +18,19 @@ DOMAIN_URL = os.environ.get('DOMAIN_URL')
 
 def sign_up_for_reports(request):
     user = request.user.username
-    SignUserUpForReports(request, user, [], 'gs_file_name').execute()
+    sign_up_user_for_reports_task.delay(user, [], 'Amazon_Ads_Data')
     return index(request)
 
 def populate_all_reports(request):
-    dates = last_n_days(60)
+    user = request.user.username
+    dates = last_n_days(2)
     for date in dates:
-        RequestAmzReportDataAllReports(request, date).execute()
+        request_amz_report_data_all_reports.delay(user, date)
     return index(request)
 
 def upload_all_reports_to_gs(request):
-    UploadDataToGoogleSheetsAllReports(request).execute()
+    user = request.user.username
+    upload_all_reports_to_gs_task.delay(user)
     return index(request)
 
 # parse request object for necessary info

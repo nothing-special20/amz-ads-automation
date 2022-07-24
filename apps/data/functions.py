@@ -25,8 +25,7 @@ def last_n_days(n):
 	return last_n_days
 
 #Amazon Functions
-def refresh_token(request):
-	user = request.user.username
+def refresh_token(user):
 	try:
 		tokens = AmzTokens.objects.filter(USER=user).values().last()
 		refresh_token = tokens['REFRESH_TOKEN']
@@ -128,8 +127,8 @@ def upload_amz_sponsored_products_keywords(data):
 	doc.save()
 
 class SignUserUpForReports:
-	def __init__(self, request, user, metrics, gs_file_name):
-		self.refresh_token = refresh_token(request)
+	def __init__(self, user, metrics, gs_file_name):
+		self.refresh_token = refresh_token(user)
 		self.user = user
 		self.gs_file_name = gs_file_name
 		self.metrics = metrics
@@ -190,38 +189,35 @@ class SignUserUpForReports:
 		return google_share_file(self.gs_id, self.user)
 
 class RequestAmzReportDataAllReports:
-	def __init__(self, request, report_date):
-		self.request = request
-		self.user = request.user.username
+	def __init__(self, user, report_date):
+		self.user = user
 		self.report_date = report_date
 
 	def execute(self):
 		reports_maintained = list(ReportsMaintained.objects.filter(USER=self.user).values())
 
-		RequestAmazonProductAdsReportData(self.request, self.report_date, reports_maintained).execute()
-		RequestAmazonSearchTermKeywordReportData(self.request, self.report_date, reports_maintained).execute()
+		RequestAmazonProductAdsReportData(self.user, self.report_date, reports_maintained).execute()
+		RequestAmazonSearchTermKeywordReportData(self.user, self.report_date, reports_maintained).execute()
 		# Currently I don't have access to a seller account with this data
-		# RequestAmazonSponsoredBrandAdsReportData(self.request, self.report_date, reports_maintained).execute()
+		# RequestAmazonSponsoredBrandAdsReportData(self.user, self.report_date, reports_maintained).execute()
 
 class UploadDataToGoogleSheetsAllReports:
-	# name = 'tasks.UploadDataToGoogleSheetsAllReports'
-	def __init__(self, request):
-		self.request = request
-		self.user = request.user.username
+	def __init__(self, user):
+		self.user = user
 
 	def execute(self):
-		UploadAmazonProductAdsReportDataToGoogleSheets(self.request).execute()
-		UploadAmazonSearchTermKeywordReportDataToGoogleSheets(self.request).execute()
+		UploadAmazonProductAdsReportDataToGoogleSheets(self.user).execute()
+		UploadAmazonSearchTermKeywordReportDataToGoogleSheets(self.user).execute()
 		# Currently I don't have access to a seller account with this data
-		# UploadAmazonSponsoredBrandAdsReportDataToGoogleSheets(self.request).execute()
+		# UploadAmazonSponsoredBrandAdsReportDataToGoogleSheets(self.user).execute()
 
 class RequestAmzReportData:
 	"""
 		Constructor
 	"""
-	def __init__(self, request, report_endpoint, sheet_name, tab_name, report_date, reports_maintained):
-		self.user = request.user.username
-		self.refresh_token = refresh_token(request)
+	def __init__(self, user, report_endpoint, sheet_name, tab_name, report_date, reports_maintained):
+		self.user = user
+		self.refresh_token = refresh_token(user)
 		self.tab_name = tab_name
 		self.report_endpoint = report_endpoint
 		self.sheet_name = sheet_name
@@ -257,13 +253,13 @@ class UploadDataToGoogleSheets:
 	"""
 		Constructor
 	"""
-	def __init__(self, request, report_endpoint, sheet_name, tab_name):
-		self.user = request.user.username
+	def __init__(self, user, report_endpoint, sheet_name, tab_name):
+		self.user = user
 		self.report_endpoint = report_endpoint
 		self.sheet_name = sheet_name
 		self.tab_name = tab_name
 		self.report_name = 'product_ads_report'
-		self.refresh_token = refresh_token(request)
+		self.refresh_token = refresh_token(user)
 		self.access_token = amz_access_token(self.refresh_token)
 		self.profile_id = amz_profiles(self.access_token)
 
@@ -303,11 +299,11 @@ class UploadDataToGoogleSheets:
 	Amazon Product Ads Reports
 """
 class RequestAmazonProductAdsReportData(RequestAmzReportData):
-	def __init__(self, request, report_date, reports_maintained):
+	def __init__(self, user, report_date, reports_maintained):
 		report_endpoint = 'sp/productAds'
 		sheet_name = 'product_ads_report'
 		tab_name = 'Sponsored Products Ads'
-		super().__init__(request, report_endpoint, sheet_name, tab_name, report_date, reports_maintained)
+		super().__init__(user, report_endpoint, sheet_name, tab_name, report_date, reports_maintained)
 
 	def metrics(self):
 		return product_ads_metrics()
@@ -319,11 +315,11 @@ class RequestAmazonProductAdsReportData(RequestAmzReportData):
 		}
 
 class UploadAmazonProductAdsReportDataToGoogleSheets(UploadDataToGoogleSheets):
-	def __init__(self, request):
+	def __init__(self, user):
 		report_endpoint = 'sp/productAds'
 		sheet_name = ''
 		tab_name = 'Sponsored Products Ads'
-		super().__init__(request, report_endpoint, sheet_name, tab_name)
+		super().__init__(user, report_endpoint, sheet_name, tab_name)
 	
 	def metrics(self):
 		return product_ads_metrics()
@@ -352,11 +348,11 @@ class UploadAmazonProductAdsReportDataToGoogleSheets(UploadDataToGoogleSheets):
 	Amazon Product Ads Reports
 """
 class RequestAmazonSponsoredBrandAdsReportData(RequestAmzReportData):
-	def __init__(self, request, report_date, reports_maintained):
+	def __init__(self, user, report_date, reports_maintained):
 		report_endpoint = 'hsa/adGroups'
 		sheet_name = 'product_brand_ads_report'
 		tab_name = 'Sponsored Brand Ads'
-		super().__init__(request, report_endpoint, sheet_name, tab_name, report_date, reports_maintained)
+		super().__init__(user, report_endpoint, sheet_name, tab_name, report_date, reports_maintained)
 
 	def metrics(self):
 		return sponsored_brands_ads_metrics()
@@ -369,11 +365,11 @@ class RequestAmazonSponsoredBrandAdsReportData(RequestAmzReportData):
 		}
 
 class UploadAmazonSponsoredBrandAdsReportDataToGoogleSheets(UploadDataToGoogleSheets):
-	def __init__(self, request):
+	def __init__(self, user):
 		report_endpoint = 'hsa/adGroups'
 		sheet_name = 'product_brand_ads_report'
 		tab_name = 'Sponsored Brand Ads'
-		super().__init__(request, report_endpoint, sheet_name, tab_name)
+		super().__init__(user, report_endpoint, sheet_name, tab_name)
 	
 	def metrics(self):
 		return sponsored_brands_ads_metrics()
@@ -386,11 +382,11 @@ class UploadAmazonSponsoredBrandAdsReportDataToGoogleSheets(UploadDataToGoogleSh
 	Amazon Search Term Reports
 """
 class RequestAmazonSearchTermKeywordReportData(RequestAmzReportData):
-	def __init__(self, request, report_date, reports_maintained):
+	def __init__(self, user, report_date, reports_maintained):
 		report_endpoint = 'sp/keywords'
 		sheet_name = 'search_term_keywords'
 		tab_name = 'Sponsored Product Keywords'
-		super().__init__(request, report_endpoint, sheet_name, tab_name, report_date, reports_maintained)
+		super().__init__(user, report_endpoint, sheet_name, tab_name, report_date, reports_maintained)
 
 	def metrics(self):
 		return search_term_keyword_metrics()
@@ -403,11 +399,11 @@ class RequestAmazonSearchTermKeywordReportData(RequestAmzReportData):
 		}
 
 class UploadAmazonSearchTermKeywordReportDataToGoogleSheets(UploadDataToGoogleSheets):
-	def __init__(self, request):
+	def __init__(self, user):
 		report_endpoint = 'sp/keywords'
 		sheet_name = ''
 		tab_name = 'Sponsored Products Keywords'
-		super().__init__(request, report_endpoint, sheet_name, tab_name)
+		super().__init__(user, report_endpoint, sheet_name, tab_name)
 	
 	def metrics(self):
 		return search_term_keyword_metrics()
@@ -419,5 +415,3 @@ class UploadAmazonSearchTermKeywordReportDataToGoogleSheets(UploadDataToGoogleSh
 			except Exception as e:
 				print(e)
 				pass
-
-
