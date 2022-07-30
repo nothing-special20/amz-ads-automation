@@ -1,0 +1,10 @@
+#dump commands
+pg_dumpall -U postgres -g > "/var/lib/postgresql/backups/vyssio-globals.sql"
+pg_dump -U postgres -Fp -s vyssio > "/var/lib/postgresql/backups/vyssio-db-schema.sql"
+pg_dump -U postgres -Fc vyssio > "/var/lib/postgresql/backups/vyssio.dump"
+
+#restore commands
+psql -U postgres --command "CREATE DATABASE vyssio_test;"
+psql -U postgres -f "/var/lib/postgresql/backups/vyssio-globals.sql"
+psql -U postgres -f "/var/lib/postgresql/backups/vyssio-db-schema.sql" vyssio_test
+pg_restore -U postgres -a -d vyssio_test -Fc "/var/lib/postgresql/backups/vyssio.dump"
