@@ -27,6 +27,10 @@ autobahn==22.6.1
     # via daphne
 automat==20.2.0
     # via twisted
+backports-zoneinfo==0.2.1
+    # via
+    #   django-celery-beat
+    #   django-timezone-field
 billiard==3.6.4.0
     # via celery
 brotli==1.0.9
@@ -34,7 +38,9 @@ brotli==1.0.9
 cachetools==5.2.0
     # via google-auth
 celery[redis]==5.2.7
-    # via -r requirements/requirements.in
+    # via
+    #   -r requirements/requirements.in
+    #   django-celery-beat
 celery-progress==0.1.2
     # via -r requirements/requirements.in
 certifi==2022.5.18.1
@@ -107,6 +113,7 @@ django==3.2.13
     #   dj-stripe
     #   django-allauth
     #   django-anymail
+    #   django-celery-beat
     #   django-hijack
     #   django-plotly-dash
     #   djangorestframework
@@ -115,10 +122,14 @@ django-allauth==0.50.0
     # via -r requirements/requirements.in
 django-anymail[mailgun]==8.6
     # via -r requirements/requirements.in
+django-celery-beat==2.3.0
+    # via -r requirements/requirements.in
 django-hijack==3.2.1
     # via -r requirements/requirements.in
 django-plotly-dash==2.0.0
     # via -r requirements/requirements.in
+django-timezone-field==5.0
+    # via django-celery-beat
 djangorestframework==3.13.1
     # via -r requirements/requirements.in
 djangorestframework-api-key==2.2.0
@@ -226,14 +237,19 @@ pyparsing==3.0.9
     # via
     #   httplib2
     #   packaging
+python-crontab==2.6.0
+    # via django-celery-beat
 python-dateutil==2.8.2
-    # via pandas
+    # via
+    #   pandas
+    #   python-crontab
 python3-openid==3.2.0
     # via django-allauth
 pytz==2022.1
     # via
     #   celery
     #   django
+    #   django-timezone-field
     #   djangorestframework
     #   pandas
 redis==4.3.1
@@ -278,6 +294,8 @@ txaio==22.2.1
     # via autobahn
 typing-extensions==4.3.0
     # via twisted
+tzdata==2022.1
+    # via django-celery-beat
 uritemplate==4.1.1
     # via
     #   coreapi

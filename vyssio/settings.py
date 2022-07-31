@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 import os
 from datetime import timedelta
 from pathlib import Path
+from celery.schedules import crontab
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -64,7 +65,8 @@ THIRD_PARTY_APPS = [
     'djstripe',  # stripe integration
     'django_plotly_dash.apps.DjangoPlotlyDashConfig',
     'channels',
-    'channels_redis'
+    'channels_redis',
+    'django_celery_beat',
 ]
 
 PEGASUS_APPS = [
@@ -373,3 +375,20 @@ PLOTLY_COMPONENTS = [
 
 #Add X_FRAME_OPTIONS = 'SAMEORIGIN' to settings.py to enable frames within HTML documents
 X_FRAME_OPTIONS = 'SAMEORIGIN'
+
+CELERY_BEAT_SCHEDULE = {
+    "sample_task": {
+        "task": "apps.data.tasks.request_amz_report_data_all_reports_all_users_yesterday",
+        # in UTC time zone
+        'schedule': crontab(minute=1, hour='22')
+    },
+    "sample_task": {
+        "task": "apps.data.tasks.upload_all_reports_all_users_to_gs_yesterday_task",
+        # in UTC time zone
+        'schedule': crontab(minute=8, hour='21')
+    },
+    "sample_task": {
+        "task": "apps.data.tasks.backup_database_task",
+        'schedule': crontab(minute=52, hour='1')
+    }
+}

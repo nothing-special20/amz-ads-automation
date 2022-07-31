@@ -6,6 +6,7 @@ services:
     # persist data beyond lifetime of container
     volumes:
       - postgres_data:/var/lib/postgresql/data/
+      - postgres_backups:/var/lib/postgresql/backups/
     environment:
       - POSTGRES_DB=vyssio
       - POSTGRES_USER=postgres
@@ -26,6 +27,7 @@ services:
       - .:/code
       - certs:/nginx/certs
       - static_volume:/home/app/web/static_files
+      - postgres_backups:/var/lib/postgresql/backups/
     ports:
       - "8000:8000"
       - "3000:3000"
@@ -39,10 +41,28 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.dev
-    # command: celery -A vyssio worker -l INFO
-    command: ["sh","-c","pip install debugpy -t /tmp && python /tmp/debugpy --listen 0.0.0.0:6900 -m celery -A vyssio worker -l info",]
+    # command: ["sh","-c","pip install debugpy -t /tmp && python /tmp/debugpy --listen 0.0.0.0:6900 -m celery -A vyssio worker -l info",]
+    command: >
+      bash -c "
+        celery -A vyssio worker -B -l INFO
+      "
     ports:
       - 6900:6900
+    volumes:
+      - .:/code
+    env_file:
+      - ./.env.dev
+    depends_on:
+      - db
+      - redis
+  celery-beat:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    command: >
+      bash -c "
+        celery -A vyssio beat --loglevel=debug --scheduler django_celery_beat.schedulers:DatabaseScheduler
+      "
     volumes:
       - .:/code
     env_file:
@@ -92,3 +112,4 @@ volumes:
   html:
   static_volume:
   certs:
+  postgres_backups:
