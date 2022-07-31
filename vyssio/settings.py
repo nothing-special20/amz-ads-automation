@@ -380,15 +380,15 @@ CELERY_BEAT_SCHEDULE = {
     "sample_task": {
         "task": "apps.data.tasks.request_amz_report_data_all_reports_all_users_yesterday",
         # in UTC time zone
-        'schedule': crontab(minute=1, hour='22')
+        'schedule': crontab(minute=1, hour='5')
     },
     "sample_task": {
         "task": "apps.data.tasks.upload_all_reports_all_users_to_gs_yesterday_task",
         # in UTC time zone
-        'schedule': crontab(minute=8, hour='21')
+        'schedule': crontab(minute=1, hour='6')
     },
     "sample_task": {
         "task": "apps.data.tasks.backup_database_task",
-        'schedule': crontab(minute=52, hour='1')
+        'schedule': crontab(minute=1, hour='7')
     }
 }
