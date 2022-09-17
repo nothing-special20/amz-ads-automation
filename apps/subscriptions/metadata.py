@@ -12,6 +12,7 @@ from typing import List, Generator, Dict
 from .exceptions import SubscriptionConfigError
 from .serializers import PlanSerializer, ProductSerializer
 
+import os
 
 @dataclass
 class ProductMetadata:
@@ -145,37 +146,14 @@ ACTIVE_PLAN_INTERVALS = [
 # with plans on your side
 ACTIVE_PRODUCTS = [
     ProductMetadata(
-        stripe_id='',
-        slug='starter',
-        name=_('Starter'),
-        description=_('For hobbyists and side-projects'),
-        features=[
-            _('Up to 100 Widgets'),
-            _('Unlimited Widget Editing'),
-        ],
-    ),
-    ProductMetadata(
-        stripe_id='',
-        slug='standard',
-        name=_('Standard'),
-        description=_('For small businesses and teams'),
-        is_default=True,
-        features=[
-            _('Up to 500 Widgets'),
-            _('Unlimited Widget Editing'),
-            _('Advanced Widget Editing Features'),
-        ],
-    ),
-    ProductMetadata(
-        stripe_id='',
-        slug='premium',
-        name=_('Premium'),
-        description=_('For small businesses and teams'),
-        features=[
-            _('Unlimited Widgets'),
-            _('All Features'),
-            _('Priority Support and Training'),
-        ],
+        stripe_id=os.getenv('STRIPE_PRODUCT_1', ''), 
+        slug='plus', 
+        name='Plus', 
+        features=['Get your paid ads data in google sheets',
+                    '2 week free trial'],
+        price_displays={}, 
+        description='The Plus plan', 
+        is_default=False
     ),
 ]
 
