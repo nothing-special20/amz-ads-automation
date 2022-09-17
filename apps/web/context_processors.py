@@ -31,3 +31,25 @@ def google_analytics_id(request):
         }
     else:
         return {}
+
+def microsoft_clarity_id(request):
+    """
+    Adds microsoft clarity id to all requests
+    """
+    if settings.MICROSOFT_CLARITY:
+        return {
+            'MICROSOFT_CLARITY': settings.MICROSOFT_CLARITY,
+        }
+    else:
+        return {}
+
+def crisp_chat_id(request):
+    """
+    Adds crisp chat id to all requests
+    """
+    if settings.CRISP_ID:
+        return {
+            'CRISP_ID': settings.CRISP_ID,
+        }
+    else:
+        return {}

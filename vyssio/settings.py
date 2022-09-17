@@ -122,6 +122,8 @@ TEMPLATES = [
                 'apps.web.context_processors.project_meta',
                  # this line can be removed if not using google analytics
                 'apps.web.context_processors.google_analytics_id',
+                'apps.web.context_processors.microsoft_clarity_id',
+                'apps.web.context_processors.crisp_chat_id',
             ],
         },
     },
