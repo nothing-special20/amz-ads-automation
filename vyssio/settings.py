@@ -34,6 +34,8 @@ ALLOWED_HOSTS = [
     'localhost'
 ]
 
+# Facebook
+FACEBOOK_PIXEL_ID = os.environ.get('FACEBOOK_PIXEL_ID', '')
 
 # Application definition
 
@@ -67,6 +69,7 @@ THIRD_PARTY_APPS = [
     'channels',
     'channels_redis',
     'django_celery_beat',
+    'analytical',
 ]
 
 PEGASUS_APPS = [
@@ -314,6 +317,10 @@ ADMINS = [('Rob', 'rquin@billmoretech.com')]
 
 # Add your google analytics ID to the environment or default value to connect to Google Analytics
 GOOGLE_ANALYTICS_ID = os.environ.get('GOOGLE_ANALYTICS_ID', '')
+
+MICROSOFT_CLARITY = os.environ.get('MICROSOFT_CLARITY', '')
+
+CRISP_ID = os.environ.get('CRISP_ID', '')
 
 
 # Stripe config

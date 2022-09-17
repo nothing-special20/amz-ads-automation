@@ -3,3 +3,4 @@
 *.pyc
 amz-ads-gs-stuff.json
 db_backup*.json
+*.icloud

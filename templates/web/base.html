@@ -1,6 +1,7 @@
 {% load static %}
 {% load meta_tags %}
 <!DOCTYPE html>
+{% load facebook_pixel %}
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -48,6 +49,7 @@
     {% endif %}
     {% block page_head %}
     {% endblock %}
+    {% facebook_pixel_head %}
 </head>
 <body>
 {% block body_wrapper %}
@@ -67,5 +69,6 @@
 {% endblock page_js %}
   {% include 'web/components/messages-js.html' %}
   <script src="{% static 'js/site-bootstrap-bundle.js' %}"></script>
+{% facebook_pixel_body %}
 </body>
 </html>

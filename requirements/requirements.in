@@ -24,3 +24,4 @@ django_plotly_dash
 channels
 channels-redis
 django-celery-beat
+django-analytical

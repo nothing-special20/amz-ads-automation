@@ -120,6 +120,8 @@ django==3.2.13
     #   jsonfield
 django-allauth==0.50.0
     # via -r requirements/requirements.in
+django-analytical==3.1.0
+    # via -r requirements/requirements.in
 django-anymail[mailgun]==8.6
     # via -r requirements/requirements.in
 django-celery-beat==2.3.0
