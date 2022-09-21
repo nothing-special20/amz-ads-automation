@@ -22,7 +22,8 @@ def home(request):
             return HttpResponseRedirect(reverse('teams:manage_teams'))
     else:
         store_email_for_newsletter(request)
-        return render(request, 'web/landing_page.html')
+        # return render(request, 'web/landing_page.html')
+        return render(request, 'web/landing_page/index.html')
 
 def store_email_for_newsletter(request):
     if request.method == 'POST':

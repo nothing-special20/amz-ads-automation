@@ -4355,7 +4355,6 @@ body .solid-button-one:hover,.navbar .navbar-toggler,.faq-tab-wrapper .faq-panel
 /*--------------------- Our Pricing/SASS ---------------------*/
 .sass-our-pricing {
   position: relative;
-  padding: 260px 0 245px;
 }
 .sass-our-pricing .section-shape-one {
   position: absolute;
