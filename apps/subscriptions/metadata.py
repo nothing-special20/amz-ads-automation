@@ -147,11 +147,29 @@ ACTIVE_PLAN_INTERVALS = [
 ACTIVE_PRODUCTS = [
     ProductMetadata(
         stripe_id=os.getenv('STRIPE_PRODUCT_1', ''), 
-        slug='vyssio', 
-        name='Vyssio', 
-        features=['Vyssio Feature 1', 'Vyssio Feature 2', 'Vyssio Feature 3'], 
+        slug='Standard', 
+        name='standard', 
+        features=['1 Amazon Account', 'Unlimited SKUs', 'Unlimited Campaigns'], 
         price_displays={}, 
-        description='The Vyssio plan', 
+        description="Vyssio's Standard Plan", 
+        is_default=False
+        ),
+    ProductMetadata(
+        stripe_id=os.getenv('STRIPE_PRODUCT_2', ''), 
+        slug='Preferred', 
+        name='preferred', 
+        features=['3 Amazon Accounts', 'Unlimited SKUs', 'Unlimited Campaigns'], 
+        price_displays={}, 
+        description="Vyssio's Preferred Plan", 
+        is_default=False
+        ),
+    ProductMetadata(
+        stripe_id=os.getenv('STRIPE_PRODUCT_3', ''), 
+        slug='Plus', 
+        name='plus', 
+        features=['10 Amazon Accounts', 'Unlimited SKUs', 'Unlimited Campaigns'], 
+        price_displays={}, 
+        description='The Vyssio Plus Plan', 
         is_default=False
         ),
 ]
