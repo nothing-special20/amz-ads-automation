@@ -147,14 +147,13 @@ ACTIVE_PLAN_INTERVALS = [
 ACTIVE_PRODUCTS = [
     ProductMetadata(
         stripe_id=os.getenv('STRIPE_PRODUCT_1', ''), 
-        slug='plus', 
-        name='Plus', 
-        features=['Get your paid ads data in google sheets',
-                    '2 week free trial'],
+        slug='vyssio', 
+        name='Vyssio', 
+        features=['Vyssio Feature 1', 'Vyssio Feature 2', 'Vyssio Feature 3'], 
         price_displays={}, 
-        description='The Plus plan', 
+        description='The Vyssio plan', 
         is_default=False
-    ),
+        ),
 ]
 
 ACTIVE_PRODUCTS_BY_ID = {
