@@ -46,7 +46,7 @@ STRIPE_LIVE_PUBLIC_KEY = os.environ.get("STRIPE_LIVE_PUBLIC_KEY", "<your publish
 STRIPE_LIVE_SECRET_KEY = os.environ.get("STRIPE_LIVE_SECRET_KEY", "<your secret key>")
 STRIPE_TEST_PUBLIC_KEY = os.environ.get("STRIPE_TEST_PUBLIC_KEY", "<your publishable key>")
 STRIPE_TEST_SECRET_KEY = os.environ.get("STRIPE_TEST_SECRET_KEY", "<your secret key>")
-STRIPE_LIVE_MODE = os.getenv('DEBUG', 'False') == 'True'  # Change to True in production
+STRIPE_LIVE_MODE = os.getenv('DEBUG', 'False') == 'False'  # Change to True in production
 
 # Mailchimp setup
 
