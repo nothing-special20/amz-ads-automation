@@ -21,7 +21,7 @@ class PaymentView(TemplateView):
 
     def get_context_data(self, **kwargs):
         return {
-            'stripe_key': settings.STRIPE_TEST_PUBLIC_KEY,
+            'stripe_key': settings.STRIPE_LIVE_PUBLIC_KEY,
             'payments': self.request.user.pegasus_payments.all(),
             'amount': EXPECTED_PAYMENT_AMOUNT,
             'active_tab': 'payments',
@@ -31,7 +31,7 @@ class PaymentView(TemplateView):
 @login_required
 @require_POST
 def create_payment_intent(request):
-    stripe.api_key = settings.STRIPE_TEST_SECRET_KEY
+    stripe.api_key = settings.STRIPE_LIVE_SECRET_KEY
     intent = stripe.PaymentIntent.create(
         amount=EXPECTED_PAYMENT_AMOUNT,
         currency='usd',
