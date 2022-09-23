@@ -9,11 +9,6 @@
     <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto mb-2 mb-lg-0">
         {% if user.is_authenticated %}
-          <li class="nav-item">
-            <a class="nav-link {% if '/pegasus/' in request.path %}active{% endif %}" href="{% url 'pegasus_examples:examples_home' %}">
-              Examples Gallery
-            </a>
-          </li>
           <div class="navbar-item has-dropdown is-hoverable">
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -50,12 +45,12 @@
             </li>
           </div>
         {% else %}
-        {% comment %} <li class="nav-item">
+        <li class="nav-item">
           <a class="nav-link" href="{% url 'account_signup' %}">Sign up</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="{% url 'account_login' %}">Sign in</a>
-        </li> {% endcomment %}
+        </li>
         {% endif %}
       </ul>
     </div>

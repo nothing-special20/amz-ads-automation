@@ -964,7 +964,7 @@ body .solid-button-one:hover,.navbar .navbar-toggler,.faq-tab-wrapper .faq-panel
 .theme-menu-one.fixed .navbar-nav .nav-item .nav-link,
 .theme-menu-two.fixed .navbar-nav .nav-item .nav-link {padding-bottom: 20px;}
 
-.theme-menu-one.fixed,.theme-menu-two.fixed {padding: 20px 0 0;}
+.theme-menu-one.fixed,.theme-menu-two.fixed {padding: 40px 0 0;}
 .theme-main-menu.theme-menu-three.fixed {padding: 20px 0 5px;}
 .theme-menu-one.fixed .logo,.theme-menu-three.fixed .logo {width: 70px;}
 .theme-menu-one.fixed .header-right-widget {top:7px;}
