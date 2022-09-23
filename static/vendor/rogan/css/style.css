@@ -369,12 +369,13 @@
 .row.gutter-50 [class*="col-"] {padding: 0 25px;}
 /*----------------- Theme button ------------------*/
 body .solid-button-one {
-  min-width: 188px;
+  min-width: 118px;
+  max-width: 118px;
   line-height: 48px;
   border-style: solid;
   border-width: 2px;
   border-radius: 30px;
-  padding: 0 35px;
+  padding: 0 10px;
   text-align: center;
   color: #fff;
   text-transform: capitalize;
