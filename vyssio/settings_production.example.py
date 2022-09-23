@@ -35,8 +35,8 @@ ANYMAIL = {
     "MAILGUN_SENDER_DOMAIN": 'www.vyssio.com',
 }
 
-SERVER_EMAIL = 'noreply@www.vyssio.com'
-DEFAULT_FROM_EMAIL = 'rquin@billmoretech.com'
+SERVER_EMAIL = 'rob@www.vyssio.com'
+DEFAULT_FROM_EMAIL = 'rob@vyssio.com'
 ADMINS = [('Your Name', 'rquin@billmoretech.com'),]
 
 GOOGLE_ANALYTICS_ID = ''  # replace with your google analytics ID to connect to Google Analytics

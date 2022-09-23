@@ -34,6 +34,9 @@ ALLOWED_HOSTS = [
     'localhost'
 ]
 
+SERVER_EMAIL = 'rob@www.vyssio.com'
+DEFAULT_FROM_EMAIL = 'rob@vyssio.com'
+
 # Facebook
 FACEBOOK_PIXEL_ID = os.environ.get('FACEBOOK_PIXEL_ID', '')
 
